@@ -11,6 +11,7 @@ import {
   Trash2,
   Pencil,
   Info,
+  Home,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
@@ -95,10 +96,10 @@ const DossiersSuivis = () => {
       </header>
 
       {/* LAYOUT */}
-      <div className="flex flex-1 pt-24">
+      <div className="flex flex-1">
         {/* SIDEBAR */}
         <aside
-          className={`flex flex-col transition-all duration-300 ${
+          className={`fixed h-full flex flex-col transition-all duration-300 pt-30 border-r ${
             sidebarOpen ? "w-64" : "w-24"
           } ${
             darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900"
@@ -118,16 +119,7 @@ const DossiersSuivis = () => {
           <nav className="flex-1 px-3 py-4 text-sm space-y-4 overflow-y-auto">
             <div>
               <ul className="space-y-2">
-                <Link to="/information">
-                  <li
-                    className={`p-2 rounded-md flex items-center gap-3 font-medium transition ${
-                      darkMode ? "hover:bg-gray-700 text-gray-200" : "hover:bg-indigo-50 text-gray-800"
-                    }`}
-                  >
-                    <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
-                  </li>
-                </Link>
-                <Link to="/assignation">
+                <Link to="/accueil">
                   <li
                     className={`p-2 rounded-md flex items-center gap-3 font-medium transition ${
                       currentPage === "Assigner un courrier"
@@ -135,17 +127,31 @@ const DossiersSuivis = () => {
                           ? "bg-gray-700 text-white"
                           : "bg-indigo-100 text-gray-800"
                         : darkMode
-                        ? "hover:bg-gray-700 text-gray-200"
-                        : "hover:bg-indigo-50 text-gray-800"
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
-                    <Folder size={18} /> {sidebarOpen && "Assigner un courrier"}
+                    <Home size={18} /> {sidebarOpen && "Accueil"}
                   </li>
                 </Link>
+                <Link to="/information">
+                  <li
+                    className={`p-2 rounded-md flex items-center gap-3 font-medium transition ${
+                      darkMode 
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                  >
+                    <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
+                  </li>
+                </Link>
+                
                 <Link to="#">
                   <li
                     className={`p-2 rounded-md flex items-center gap-3 font-medium transition ${
-                      darkMode ? "hover:bg-gray-700 text-gray-200" : "hover:bg-indigo-50 text-gray-800"
+                      darkMode 
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
                     <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
@@ -154,7 +160,9 @@ const DossiersSuivis = () => {
                 <Link to="/dashboard">
                   <li
                     className={`p-2 rounded-md flex items-center gap-3 font-medium transition ${
-                      darkMode ? "hover:bg-gray-700 text-gray-200" : "hover:bg-indigo-50 text-gray-800"
+                      darkMode 
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
                     <Grid size={18} /> {sidebarOpen && "Dashboard"}
@@ -164,7 +172,13 @@ const DossiersSuivis = () => {
             </div>
 
             <div>
-              <p className="font-semibold mt-3">{sidebarOpen && "Mes dossiers"}</p>
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
+                Mes dossiers
+              </p>
               <ul className="space-y-2 mt-1">
                 <Link to="/dossiers-affectes">
                   <li
@@ -194,7 +208,13 @@ const DossiersSuivis = () => {
             </div>
 
             <div>
-              <p className="font-semibold mt-3">{sidebarOpen && "Dossiers des divisions"}</p>
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
+                Dossiers des divisions
+              </p>
               <ul className="space-y-2 mt-1">
                 <Link to="/dossiers-divisions">
                   <li
@@ -229,7 +249,7 @@ const DossiersSuivis = () => {
         </aside>
 
         {/* MAIN */}
-        <main className="flex-1 p-6 overflow-auto relative">
+        <main className="flex-1 p-6 ml-65 mr-1 overflow-auto pt-30 relative">
           {/* Bouton dark mode */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
@@ -310,7 +330,7 @@ const DossiersSuivis = () => {
           <div className={`rounded-xl shadow-lg overflow-hidden ${darkMode ? "bg-gray-800" : "bg-white"}`}>
             <div className="p-6 border-b" style={{ borderColor: darkMode ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.03)" }}>
               <h2 className={`text-2xl font-semibold ${darkMode ? "text-white" : "text-indigo-800"}`}>Listes des enregistrements</h2>
-              <p className="text-sm text-gray-500 mt-1">Sélectionner un enregistrement puis appuyer sur "Modifier l'observation".</p>
+              <p className="text-sm text-gray-500 mt-1">Sélectionnez un enregistrement puis appuyer sur "Modifier l'observation" pour modifier son observation.</p>
             </div>
 
             <div className="p-4 overflow-x-auto">

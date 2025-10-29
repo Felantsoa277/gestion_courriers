@@ -17,13 +17,22 @@ import {
   Grid,
   Pencil,
   File,
+  Home,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
 const DossiersSansAffectataires = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [query, setQuery] = useState("");
+
+  // États pour les filtres
+  const [filterProvenance, setFilterProvenance] = useState("");
+  const [filterDateArrivee, setFilterDateArrivee] = useState("");
+  const [filterNumeroCorr, setFilterNumeroCorr] = useState("");
+  const [filterTexte, setFilterTexte] = useState("");
+
+  //État pour la ligne sélectionnée
+  const [selectedId, setSelectedId] = useState(null);
 
   const currentPage = "Dossier sans affectataires";
 
@@ -54,13 +63,17 @@ const DossiersSansAffectataires = () => {
     },
   ];
 
+  // Fonction de filtrage
   const filtered = enregistrements.filter((e) => {
-    const q = query.trim().toLowerCase();
-    if (!q) return true;
     return (
-      e.numero.toLowerCase().includes(q) ||
-      e.provenance.toLowerCase().includes(q) ||
-      e.texte.toLowerCase().includes(q)
+      (!filterProvenance ||
+        e.provenance.toLowerCase().includes(filterProvenance.toLowerCase())) &&
+      (!filterDateArrivee || e.dateArrivee === filterDateArrivee) &&
+      (!filterNumeroCorr ||
+        e.numeroCorrespondance
+          .toLowerCase()
+          .includes(filterNumeroCorr.toLowerCase())) &&
+      (!filterTexte || e.texte.toLowerCase().includes(filterTexte.toLowerCase()))
     );
   });
 
@@ -121,8 +134,19 @@ const DossiersSansAffectataires = () => {
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
                     darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
+                  }`}
+                >
+                  <Link to="/accueil" className="flex items-center gap-2 w-full">
+                    <Home size={18} /> {sidebarOpen && "Accueil"}
+                  </Link>
+                </li>
+                <li
+                  className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
+                    darkMode
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
                   <Link to="/information" className="flex items-center gap-2 w-full">
@@ -133,20 +157,8 @@ const DossiersSansAffectataires = () => {
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
                     darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
-                  }`}
-                >
-                  <Link to="/assignation" className="flex items-center gap-2 w-full">
-                    <FolderCog size={18} /> {sidebarOpen && "Assigner un courrier"}
-                  </Link>
-                </li>
-
-                <li
-                  className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
-                    darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
                   <Link to="#" className="flex items-center gap-2 w-full">
@@ -157,8 +169,8 @@ const DossiersSansAffectataires = () => {
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
                     darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
                   <Link to="/dashboard" className="flex items-center gap-2 w-full">
@@ -169,7 +181,13 @@ const DossiersSansAffectataires = () => {
             </div>
 
             <div>
-              <p className="font-semibold mt-3 text-indigo-500">Mes dossiers</p>
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
+                Mes dossiers
+              </p>
               <ul className="space-y-2 mt-1">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-2 font-medium transition duration-200 ease-in-out ${
@@ -198,7 +216,11 @@ const DossiersSansAffectataires = () => {
             </div>
 
             <div>
-              <p className="font-semibold mt-3 text-indigo-500">
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
                 Dossiers des divisions
               </p>
               <ul className="space-y-2 mt-1">
@@ -273,36 +295,68 @@ const DossiersSansAffectataires = () => {
                 <span className="font-medium">Informations</span>
               </Link>
 
+              {/*Bouton Assigner activé seulement si une ligne est sélectionnée */}
               <Link
-                to="/assignation"
+                to={selectedId ? "/assignation" : "#"}
                 className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
-                  darkMode
-                    ? "bg-gray-700 border-gray-600 text-gray-100"
-                    : "bg-white border-indigo-100 text-indigo-800"
+                  selectedId
+                    ? darkMode
+                      ? "bg-gray-700 border-gray-600 text-gray-100"
+                      : "bg-white border-indigo-100 text-indigo-800"
+                    : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
                 } shadow-sm hover:shadow-md transition`}
+                onClick={(e) => {
+                  if (!selectedId) e.preventDefault();
+                }}
               >
                 <File size={18} />
                 <span className="font-medium">Assigner</span>
               </Link>
             </div>
+          </div>
 
-            <div className="w-full lg:w-1/3">
-              <div
-                className={`flex items-center border rounded-lg px-3 py-2 ${
-                  darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+          {/* Filtrage multi-critères */}
+          <div className="flex flex-col lg:flex-row gap-3 items-end mb-6">
+            <div className="flex gap-2 flex-wrap w-full lg:w-3/4">
+              <input
+                type="text"
+                value={filterProvenance}
+                onChange={(e) => setFilterProvenance(e.target.value)}
+                placeholder="Provenance"
+                className={`flex-1 px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
                 }`}
-              >
-                <Search size={18} className="text-gray-400" />
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Rechercher un courrier, provenance..."
-                  className={`ml-2 w-full bg-transparent outline-none text-sm ${
-                    darkMode ? "text-gray-100" : "text-gray-700"
-                  }`}
-                />
-              </div>
+              />
+              <input
+                type="date"
+                value={filterDateArrivee}
+                onChange={(e) => setFilterDateArrivee(e.target.value)}
+                className={`px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
+              <input
+                type="text"
+                value={filterNumeroCorr}
+                onChange={(e) => setFilterNumeroCorr(e.target.value)}
+                placeholder="N° Correspondance"
+                className={`px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
+              <input
+                type="text"
+                value={filterTexte}
+                onChange={(e) => setFilterTexte(e.target.value)}
+                placeholder="Objet"
+                className={`px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
             </div>
+            <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition">
+              Filtrer
+            </button>
           </div>
 
           {/* GRAND CARD */}
@@ -327,7 +381,7 @@ const DossiersSansAffectataires = () => {
                 Listes des enregistrements
               </h2>
               <p className="text-sm text-gray-500 mt-1">
-                Séléctionner un enregistrement puis appuyer sur le bouton "Assigner" pour l'affecter vers une division.
+                Sélectionnez un enregistrement puis appuyez sur le bouton <strong>"Assigner"</strong> pour l'affecter vers une division.
               </p>
             </div>
 
@@ -363,8 +417,15 @@ const DossiersSansAffectataires = () => {
                     filtered.map((item) => (
                       <tr
                         key={item.id}
-                        className={`border-b ${
-                          darkMode ? "border-gray-700 hover:bg-gray-700" : "hover:bg-indigo-50"
+                        onClick={() => setSelectedId(selectedId === item.id ? null : item.id)}
+                        className={`cursor-pointer border-b ${
+                          selectedId === item.id
+                            ? darkMode
+                              ? "bg-indigo-900 text-white"
+                              : "bg-indigo-200 text-indigo-900"
+                            : darkMode
+                            ? "border-gray-700 hover:bg-gray-700"
+                            : "hover:bg-indigo-50"
                         }`}
                       >
                         <td className="px-4 py-3 text-sm">{item.numero}</td>

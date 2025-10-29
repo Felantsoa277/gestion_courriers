@@ -38,7 +38,7 @@ const Enregistrement = () => {
 
   return (
     <div
-      className={`flex flex-col min-h-screen transition-colors duration-300 ${
+      className={`fixed top-0 left-0 w-full z-40 flex flex-col min-h-screen transition-colors duration-300 ${
         darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-100 text-gray-900"
       }`}
     >
@@ -246,7 +246,7 @@ const Enregistrement = () => {
         </aside>
 
         {/* MAIN */}
-        <main className="flex-1 p-6 overflow-auto relative">
+        <main className="flex-1 p-6 overflow-y-auto h-[calc(100vh-64px)] relative">
           {/* BOUTON MODE CLAIR/SOMBRE */}
           <div className="absolute bottom-4 right-4 z-20">
             <button

@@ -21,7 +21,12 @@ import logo from "../assets/mef.png";
 const DossiersClasses = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [query, setQuery] = useState("");
+
+  // États pour les filtres
+  const [filterProvenance, setFilterProvenance] = useState("");
+  const [filterDateArrivee, setFilterDateArrivee] = useState("");
+  const [filterNumeroCorr, setFilterNumeroCorr] = useState("");
+  const [filterTexte, setFilterTexte] = useState("");
 
   const currentPage = "Dossier archivés/classés";
 
@@ -52,13 +57,17 @@ const DossiersClasses = () => {
     },
   ];
 
+  // Fonction de filtrage
   const filtered = enregistrements.filter((e) => {
-    const q = query.trim().toLowerCase();
-    if (!q) return true;
     return (
-      e.numero.toLowerCase().includes(q) ||
-      e.provenance.toLowerCase().includes(q) ||
-      e.texte.toLowerCase().includes(q)
+      (!filterProvenance ||
+        e.provenance.toLowerCase().includes(filterProvenance.toLowerCase())) &&
+      (!filterDateArrivee || e.dateArrivee === filterDateArrivee) &&
+      (!filterNumeroCorr ||
+        e.numeroCorrespondance
+          .toLowerCase()
+          .includes(filterNumeroCorr.toLowerCase())) &&
+      (!filterTexte || e.texte.toLowerCase().includes(filterTexte.toLowerCase()))
     );
   });
 
@@ -272,24 +281,50 @@ const DossiersClasses = () => {
                 <Info size={18} /> <span className="font-medium">Informations</span>
               </Link>
             </div>
+          </div>
 
-            <div className="w-full lg:w-1/3">
-              <div
-                className={`flex items-center border rounded-lg px-3 py-2 ${
-                  darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+          {/* Filtrage multi-critères */}
+          <div className="flex flex-col lg:flex-row gap-3 items-end mb-6">
+            <div className="flex gap-2 flex-wrap w-full lg:w-3/4">
+              <input
+                type="text"
+                value={filterProvenance}
+                onChange={(e) => setFilterProvenance(e.target.value)}
+                placeholder="Provenance"
+                className={`flex-1 px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
                 }`}
-              >
-                <Search size={18} className="text-gray-400" />
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Rechercher un courrier, provenance..."
-                  className={`ml-2 w-full bg-transparent outline-none text-sm ${
-                    darkMode ? "text-gray-100" : "text-gray-700"
-                  }`}
-                />
-              </div>
+              />
+              <input
+                type="date"
+                value={filterDateArrivee}
+                onChange={(e) => setFilterDateArrivee(e.target.value)}
+                className={`px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
+              <input
+                type="text"
+                value={filterNumeroCorr}
+                onChange={(e) => setFilterNumeroCorr(e.target.value)}
+                placeholder="N° Correspondance"
+                className={`px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
+              <input
+                type="text"
+                value={filterTexte}
+                onChange={(e) => setFilterTexte(e.target.value)}
+                placeholder="Objet"
+                className={`px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
             </div>
+            <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition">
+              Filtrer
+            </button>
           </div>
 
           {/* Tableau */}

@@ -11,6 +11,7 @@ import {
   UserCircle,
   Grid,
   FileText,
+  Home
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
@@ -104,6 +105,18 @@ const DossiersDivisions = () => {
           <nav className="flex-1 px-3 py-4 text-sm space-y-4 overflow-y-auto">
             <div>
               <ul className="space-y-2">
+                <Link to="/accueil">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                  >
+                    <Home size={18} />{" "}
+                    {sidebarOpen && "Accueil"}
+                  </li>
+                </Link>
                 <Link to="/information">
                   <li
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
@@ -113,18 +126,6 @@ const DossiersDivisions = () => {
                     }`}
                   >
                     <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
-                  </li>
-                </Link>
-                <Link to="/assignation">
-                  <li
-                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
-                      darkMode
-                        ? "hover:bg-gray-700 text-gray-100"
-                        : "hover:bg-indigo-50 text-indigo-800"
-                    }`}
-                  >
-                    <FolderCog size={18} />{" "}
-                    {sidebarOpen && "Assigner un courrier"}
                   </li>
                 </Link>
                 <Link to="#">
