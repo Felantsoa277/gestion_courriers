@@ -155,7 +155,7 @@ const DossiersSuivis = () => {
                   </li>
                 </Link>
                 
-                <Link to="#">
+                <Link to="/informationdepart">
                   <li
                     className={`p-2 rounded-md flex items-center gap-3 font-medium transition ${
                       darkMode 
@@ -203,8 +203,8 @@ const DossiersSuivis = () => {
                     className={`p-2 rounded-md flex items-center gap-2 font-medium transition ${
                       currentPage === "Dossier suivis"
                         ? darkMode
-                          ? "bg-gray-700 text-white"
-                          : "bg-indigo-100 text-gray-800"
+                          ? "bg-indigo-900 text-indigo-200"
+                        : "bg-indigo-100 text-indigo-800"
                         : darkMode
                         ? "hover:bg-gray-700 text-gray-200"
                         : "hover:bg-indigo-50 text-gray-800"
@@ -403,13 +403,8 @@ const DossiersSuivis = () => {
                             {item.etat}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-center">
-                          <button
-                            className="text-red-600 hover:text-red-800"
-                            aria-label="supprimer"
-                          >
-                            <Trash2 size={25} />
-                          </button>
+                        <td className="px-4 py-3 text-center flex justify-center gap-2">
+                          <button className="px-2 py-1 mt-3 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={20} /></button>
                         </td>
                       </tr>
                     ))

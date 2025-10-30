@@ -19,7 +19,8 @@ import DossiersSansAffectataires from './pages/DossiersSansAffectataires'
 import DossiersClasses from './pages/DossiersClassés'
 import DossiersDivisions from './pages/DossiersDivisions'
 import ListeDossiersDivisions from './pages/ListeDossiersDivisions'
-import DepartDuCourrier from './pages/DepartCourrier'
+import DepartCourrier from './pages/DepartCourrier'
+import EnregistrementDepart from './pages/EnregistrementDepart'
 function App() {
   return (
     <DarkModeProvider>
@@ -31,7 +32,8 @@ function App() {
         <Route path="/profil" element={<ProfilPage />} />
         <Route path="/accueil" element={<Accueil />} />
         <Route path="/information" element={<Informations />} />
-        <Route path="/depart" element={<DepartDuCourrier />} />
+        <Route path="/informationdepart" element={<DepartCourrier />} />
+        <Route path="/enregistrementdepart" element={<EnregistrementDepart />} />
         <Route path="/modification/:id" element={<ModificationEnregistrement />} />
         <Route path="/enregistrement" element={<Enregistrement />} />
         <Route path="/observation-form" element={<ObservationPage />} />

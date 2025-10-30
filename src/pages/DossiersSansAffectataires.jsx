@@ -155,6 +155,7 @@ const DossiersSansAffectataires = () => {
                   </Link>
                 </li>
 
+                <Link to="/informationdepart">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
                     darkMode
@@ -166,6 +167,7 @@ const DossiersSansAffectataires = () => {
                     <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
                   </Link>
                 </li>
+                </Link>
 
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
@@ -241,8 +243,8 @@ const DossiersSansAffectataires = () => {
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-2 font-medium transition duration-200 ease-in-out ${
                     currentPage === "Dossier sans affectataires"
                       ? darkMode
-                        ? "bg-gray-700 text-white"
-                        : "bg-indigo-100 text-gray-800"
+                        ? "bg-indigo-900 text-indigo-200"
+                        : "bg-indigo-100 text-indigo-800"
                       : darkMode
                       ? "hover:bg-gray-700 text-gray-200"
                       : "hover:bg-indigo-50 text-gray-800"
@@ -379,7 +381,7 @@ const DossiersSansAffectataires = () => {
                   darkMode ? "text-white" : "text-indigo-800"
                 }`}
               >
-                Listes des enregistrements
+                Listes des courriers sans affectataires
               </h2>
               <p className="text-sm text-gray-500 mt-1">
                 Sélectionnez un enregistrement puis appuyez sur le bouton <strong>"Assigner"</strong> pour l'affecter à une division.
@@ -429,17 +431,17 @@ const DossiersSansAffectataires = () => {
                             : "hover:bg-indigo-50"
                         }`}
                       >
-                        <td className="px-4 py-3 text-sm">{item.numero}</td>
-                        <td className="px-4 py-3 text-sm">{item.dateArrivee}</td>
-                        <td className="px-4 py-3 text-sm">{item.provenance}</td>
-                        <td className="px-4 py-3 text-sm">{item.numeroCorrespondance}</td>
-                        <td className="px-4 py-3 text-sm">{item.dateCorrespondance}</td>
-                        <td className="px-4 py-3 text-sm">{item.texte}</td>
-                        <td className="px-4 py-3 text-sm">{item.observation}</td>
-                        <td className="px-4 py-3 text-sm">{item.bureau}</td>
-                        <td className="px-4 py-3 text-sm">
+                        <td className="px-2 py-3 text-center text-sm">{item.numero}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.dateArrivee}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.provenance}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.numeroCorrespondance}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.dateCorrespondance}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.texte}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.observation}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.bureau}</td>
+                        <td className="px-2 py-3 text-center text-sm">
                           <span
-                            className={`px-2 py-1 rounded-full text-sm ${
+                            className={`px-2 py-1 text-center rounded-full text-sm ${
                               item.etat === "Traitée"
                                 ? "bg-green-200 text-green-800"
                                 : "bg-yellow-200 text-yellow-800"
@@ -448,17 +450,9 @@ const DossiersSansAffectataires = () => {
                             {item.etat}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-center">
-                          <div className="flex items-center justify-center gap-3">
-                            <Link to={`/modification/${item.id}`}>
-                              <button className="text-green-600 hover:text-green-800" aria-label="modifier">
-                                <Edit size={18} />
-                              </button>
-                            </Link>
-                            <button className="text-red-600 hover:text-red-800" aria-label="supprimer">
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
+                        <td className="px-4 py-3 text-center flex justify-center gap-2">
+                          <button className="px-2 py-1 mt-3 bg-blue-600 text-white rounded hover:bg-blue-700"><Edit size={18} /></button>
+                          <button className="px-2 py-1 mt-3 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={18} /></button>
                         </td>
                       </tr>
                     ))

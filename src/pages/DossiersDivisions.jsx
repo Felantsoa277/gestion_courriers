@@ -129,7 +129,7 @@ const DossiersDivisions = () => {
                     <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
                   </li>
                 </Link>
-                <Link to="#">
+                <Link to="/informationdepart">
                   <li
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
                       darkMode
@@ -202,11 +202,11 @@ const DossiersDivisions = () => {
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-2 ${
                       currentPage === "Dossier des divisions"
                         ? darkMode
-                          ? "bg-indigo-900"
-                          : "bg-indigo-100"
+                        ? "bg-indigo-900 text-indigo-200"
+                        : "bg-indigo-100 text-indigo-800"
                         : darkMode
-                        ? "hover:bg-gray-700"
-                        : "hover:bg-indigo-50"
+                        ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
                     <Folder size={18} />{" "}

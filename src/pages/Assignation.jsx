@@ -166,6 +166,7 @@ const Assignation = () => {
                 </li>
               </Link>
 
+              <Link to="/informationdepart">
               <li
                 className={`p-2 rounded-md flex items-center gap-3 cursor-pointer font-medium transition duration-200 ease-in-out ${
                   darkMode
@@ -175,6 +176,7 @@ const Assignation = () => {
               >
                 <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
               </li>
+              </Link>
 
               <Link to="/dashboard">
                 <li

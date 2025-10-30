@@ -137,6 +137,7 @@ const ModificationEnregistrement = () => {
                   <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
                 </li>
 
+                <Link to="/informationdepart">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
                     darkMode
@@ -146,6 +147,7 @@ const ModificationEnregistrement = () => {
                 >
                   <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
                 </li>
+                </Link>
 
                 <Link to="/dashboard">
                   <li
@@ -286,7 +288,7 @@ const ModificationEnregistrement = () => {
                   darkMode ? "text-white" : "text-indigo-800"
                 }`}
               >
-                Modification des informations d'un courrier
+                MODIFICATION ENREGISTREMENT
               </h2>
               <p className="text-sm text-gray-500 text-center mt-1">
                 Mettez à jour les informations du courrier sélectionné.

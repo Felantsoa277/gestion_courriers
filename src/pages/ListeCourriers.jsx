@@ -157,6 +157,7 @@ const Informations = () => {
                   <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
                 </li>
 
+                <Link to="/informationdepart">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
                     darkMode
@@ -166,6 +167,7 @@ const Informations = () => {
                 >
                   <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
                 </li>
+                </Link>
 
                 <Link to="/dashboard">
                   <li
@@ -446,23 +448,9 @@ const Informations = () => {
                             {item.etat}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-center">
-                          <div className="flex items-center justify-center gap-3">
-                            <Link to={`/modification/${item.id}`}>
-                              <button
-                                className="text-green-600 hover:text-green-800"
-                                aria-label="modifier"
-                              >
-                                <Edit size={18} />
-                              </button>
-                            </Link>
-                            <button
-                              className="text-red-600 hover:text-red-800"
-                              aria-label="supprimer"
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
+                        <td className="px-4 py-3 text-center flex justify-center gap-2">
+                          <button className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"><Edit size={16} /></button>
+                          <button className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={16} /></button>
                         </td>
                       </tr>
                     ))

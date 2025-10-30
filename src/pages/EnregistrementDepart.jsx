@@ -18,23 +18,24 @@ import {
   Grid,
   CheckCircle2,
   Home,
+  FileText,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
-const Enregistrement = () => {
+const EnregistrementDepart = () => {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const currentPage = "Arriver du courrier";
+  const currentPage = "Départ du courrier";
 
   // Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
     setSuccess(true);
     setTimeout(() => {
-      navigate("/information");
+      navigate("/informationdepart");
     }, 2500);
   };
 
@@ -114,9 +115,21 @@ const Enregistrement = () => {
                     {sidebarOpen && "Accueil"}
                   </li>
                 </Link>
+                <Link to="/information">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
-                    currentPage === "Arriver du courrier"
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-200"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                >
+                  <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
+                </li>
+                </Link>
+
+                <li
+                  className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
+                    currentPage === "Départ du courrier"
                       ? darkMode
                         ? "bg-indigo-900 text-indigo-200"
                         : "bg-indigo-100 text-indigo-800"
@@ -125,20 +138,8 @@ const Enregistrement = () => {
                       : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
-                  <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
-                </li>
-
-                <Link to="/informationdepart">
-                <li
-                  className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
-                    darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-indigo-800"
-                  }`}
-                >
                   <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
                 </li>
-                </Link>
 
                 <Link to="/dashboard">
                   <li
@@ -265,7 +266,7 @@ const Enregistrement = () => {
           <div className="flex flex-col lg:flex-row gap-4 items-start justify-between mb-6">
             <div className="flex gap-3 flex-wrap">
               <Link
-                to="/information"
+                to="/informationdepart"
                 className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
                   darkMode
                     ? "bg-gray-800 border-gray-700 text-gray-100"
@@ -284,7 +285,7 @@ const Enregistrement = () => {
                 } shadow-sm hover:shadow-md transition`}
               >
                 <Save size={18} />
-                <span className="font-medium">Enregistrer un courrier</span>
+                <span className="font-medium">Enregistrer un départ</span>
               </button>
             </div>
           </div>
@@ -308,10 +309,10 @@ const Enregistrement = () => {
                   darkMode ? "text-white" : "text-indigo-800"
                 }`}
               >
-                ENREGISTREMENT COURRIER
+                ENREGISTREMENT DES INFORMATIONS DE DEPART D'UN COURRIER
               </h2>
               <p className="text-sm text-gray-500 text-center mt-1">
-                Veuillez remplir les informations du courrier reçu.
+                Veuillez remplir les informations de départ du courrier.
               </p>
             </div>
 
@@ -322,7 +323,7 @@ const Enregistrement = () => {
             >
               <div className="flex flex-col">
                 <label className="text-xl font-semibold mb-1">
-                  Date de réception
+                  Date de départ
                 </label>
                 <input
                   type="date"
@@ -335,7 +336,7 @@ const Enregistrement = () => {
               </div>
 
               <div className="flex flex-col">
-                <label className="text-xl font-semibold mb-1">Provenance</label>
+                <label className="text-xl font-semibold mb-1">Destinataire</label>
                 <input
                   type="text"
                   placeholder="Ex: Ministère de l'Économie"
@@ -412,7 +413,7 @@ const Enregistrement = () => {
                 >
                   Enregistrer
                 </button>
-                <Link to="/information">
+                <Link to="/informationdepart">
                   <button className="bg-gray-200 text-black w-100 px-6 py-2 rounded-lg hover:bg-gray-300 font-medium">
                     Annuler
                   </button>
@@ -442,7 +443,7 @@ const Enregistrement = () => {
                   Vous serez redirigé vers la page d’informations.
                 </p>
                 <Link
-                  to="/information"
+                  to="/informationdepart"
                   className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
                 >
                   Retourner maintenant
@@ -456,4 +457,4 @@ const Enregistrement = () => {
   );
 };
 
-export default Enregistrement;
+export default EnregistrementDepart;

@@ -134,6 +134,7 @@ const ObservationPage = () => {
                   </li>
                 </Link>
                 
+                <Link to="/informationdepart">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
                     darkMode
@@ -143,6 +144,7 @@ const ObservationPage = () => {
                 >
                   <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
                 </li>
+                </Link>
                 <Link to="/dashboard">
                   <li
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
@@ -172,8 +174,8 @@ const ObservationPage = () => {
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-2 font-medium transition duration-200 ease-in-out ${
                       currentPage === "Dossier affectés"
                         ? darkMode
-                          ? "bg-gray-700 text-white"
-                          : "bg-indigo-100 text-gray-800"
+                          ? "bg-indigo-900 text-indigo-200"
+                        : "bg-indigo-100 text-indigo-800"
                         : darkMode
                         ? "hover:bg-gray-700 text-gray-200"
                         : "hover:bg-indigo-50 text-gray-800"

@@ -101,7 +101,7 @@ const DossiersClasses = () => {
         </Link>
       </header>
 
-      {/* LAYOUT: SIDEBAR + MAIN */}
+      {/* LAYOUT: SIDEBAR  MAIN */}
       <div className="flex flex-1">
         {/* SIDEBAR */}
         <aside
@@ -151,7 +151,7 @@ const DossiersClasses = () => {
                   </li>
                 </Link>
                 
-                <Link to="#">
+                <Link to="/informationdepart">
                   <li
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition ${
                       darkMode
@@ -248,8 +248,8 @@ const DossiersClasses = () => {
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-2 font-medium transition ${
                       currentPage === "Dossier archivés/classés"
                         ? darkMode
-                          ? "bg-gray-700 text-white"
-                          : "bg-indigo-100 text-gray-800"
+                        ? "bg-indigo-900 text-indigo-200"
+                        : "bg-indigo-100 text-indigo-800"
                         : darkMode
                         ? "hover:bg-gray-700 text-gray-200"
                         : "hover:bg-indigo-50 text-gray-800"
@@ -359,7 +359,7 @@ const DossiersClasses = () => {
                   darkMode ? "text-white" : "text-indigo-800"
                 }`}
               >
-                Listes des enregistrements
+                Listes des courriers classés et archivés
               </h2>
               <p className="text-sm text-gray-500 mt-1">
                 Visualisez les courriers enregistrés classés et archivés. ({filtered.length})
@@ -374,15 +374,15 @@ const DossiersClasses = () => {
                       darkMode ? "bg-indigo-950 text-white" : "bg-indigo-100 text-indigo-900"
                     }`}
                   >
-                    <th className="px-4 py-3 text-left text-sm">N° d'enregistrement</th>
-                    <th className="px-4 py-3 text-left text-sm">Date de l'arrivée</th>
-                    <th className="px-4 py-3 text-left text-sm">Provenance</th>
-                    <th className="px-4 py-3 text-left text-sm">N° de la correspondance</th>
-                    <th className="px-4 py-3 text-left text-sm">Date de la correspondance</th>
-                    <th className="px-4 py-3 text-left text-sm">Texte</th>
-                    <th className="px-4 py-3 text-left text-sm">Observation</th>
-                    <th className="px-4 py-3 text-left text-sm">Bureaux destinataires</th>
-                    <th className="px-4 py-3 text-left text-sm w-36">État</th>
+                    <th className="px-4 py-3 text-center text-sm">N° d'enregistrement</th>
+                    <th className="px-4 py-3 text-center text-sm">Date de l'arrivée</th>
+                    <th className="px-4 py-3 text-center text-sm">Provenance</th>
+                    <th className="px-4 py-3 text-center text-sm">N° de la correspondance</th>
+                    <th className="px-4 py-3 text-center text-sm">Date de la correspondance</th>
+                    <th className="px-4 py-3 text-center text-sm">Texte</th>
+                    <th className="px-4 py-3 text-center text-sm">Observation</th>
+                    <th className="px-4 py-3 text-center text-sm">Bureaux destinataires</th>
+                    <th className="px-4 py-3 text-center text-sm w-36">État</th>
                     <th className="px-4 py-3 text-center text-sm">Actions</th>
                   </tr>
                 </thead>
@@ -402,17 +402,17 @@ const DossiersClasses = () => {
                           darkMode ? "border-gray-700 hover:bg-gray-700" : "hover:bg-indigo-50"
                         }`}
                       >
-                        <td className="px-4 py-3 text-sm">{item.numero}</td>
-                        <td className="px-4 py-3 text-sm">{item.dateArrivee}</td>
-                        <td className="px-4 py-3 text-sm">{item.provenance}</td>
-                        <td className="px-4 py-3 text-sm">{item.numeroCorrespondance}</td>
-                        <td className="px-4 py-3 text-sm">{item.dateCorrespondance}</td>
-                        <td className="px-4 py-3 text-sm">{item.texte}</td>
-                        <td className="px-4 py-3 text-sm">{item.observation}</td>
-                        <td className="px-4 py-3 text-sm">{item.bureau}</td>
-                        <td className="px-4 py-3 text-sm">
+                        <td className="px-4 py-3 text-center text-sm">{item.numero}</td>
+                        <td className="px-4 py-3 text-center text-sm">{item.dateArrivee}</td>
+                        <td className="px-4 py-3 text-center text-sm">{item.provenance}</td>
+                        <td className="px-4 py-3 text-center text-sm">{item.numeroCorrespondance}</td>
+                        <td className="px-4 py-3 text-center text-sm">{item.dateCorrespondance}</td>
+                        <td className="px-4 py-3 text-center text-sm">{item.texte}</td>
+                        <td className="px-4 py-3 text-center text-sm">{item.observation}</td>
+                        <td className="px-4 py-3 text-center text-sm">{item.bureau}</td>
+                        <td className="px-4 py-3 text-center text-sm">
                           <span
-                            className={`px-2 py-1 rounded-full text-sm ${
+                            className={`px-2 py-1 text-center rounded-full text-sm ${
                               item.etat === "Traité"
                                 ? "bg-green-200 text-green-800"
                                 : "bg-yellow-200 text-yellow-800"
@@ -421,23 +421,9 @@ const DossiersClasses = () => {
                             {item.etat}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-center">
-                          <div className="flex items-center justify-center gap-3">
-                            <Link to={`/modification/${item.id}`}>
-                              <button
-                                className="text-green-600 hover:text-green-800"
-                                aria-label="modifier"
-                              >
-                                <Edit size={18} />
-                              </button>
-                            </Link>
-                            <button
-                              className="text-red-600 hover:text-red-800"
-                              aria-label="supprimer"
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
+                        <td className="px-4 py-3 text-center flex justify-center gap-2">
+                          <button className="px-2 py-1 mt-3 bg-blue-600 text-white rounded hover:bg-blue-700"><Edit size={18} /></button>
+                          <button className="px-2 py-1 mt-3 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={18} /></button>
                         </td>
                       </tr>
                     ))

@@ -166,7 +166,7 @@ const ModificationObservation = () => {
                       : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
-                  <Link to="#" className="flex items-center gap-2 w-full">
+                  <Link to="/informationdepart" className="flex items-center gap-2 w-full">
                     <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
                   </Link>
                 </li>
@@ -296,7 +296,7 @@ const ModificationObservation = () => {
                 darkMode ? "text-indigo-300" : "text-indigo-700"
               }`}
             >
-              OBSERVATION
+              MODIFICATION OBSERVATION
             </h2>
 
             <div className="text-center mt-2">
