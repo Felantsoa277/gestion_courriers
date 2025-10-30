@@ -381,7 +381,7 @@ const DossiersSansAffectataires = () => {
                 Listes des enregistrements
               </h2>
               <p className="text-sm text-gray-500 mt-1">
-                Sélectionnez un enregistrement puis appuyez sur le bouton <strong>"Assigner"</strong> pour l'affecter vers une division.
+                Sélectionnez un enregistrement puis appuyez sur le bouton <strong>"Assigner"</strong> pour l'affecter à une division.
               </p>
             </div>
 
@@ -393,15 +393,15 @@ const DossiersSansAffectataires = () => {
                       darkMode ? "bg-indigo-950 text-white" : "bg-indigo-100 text-indigo-900"
                     }`}
                   >
-                    <th className="px-4 py-3 text-left text-sm">N° d'enregistrement</th>
-                    <th className="px-4 py-3 text-left text-sm">Date de l'arrivée</th>
-                    <th className="px-4 py-3 text-left text-sm">Provenance</th>
-                    <th className="px-4 py-3 text-left text-sm">N° de la correspondance</th>
-                    <th className="px-4 py-3 text-left text-sm">Date de la correspondance</th>
-                    <th className="px-4 py-3 text-left text-sm">Texte</th>
-                    <th className="px-4 py-3 text-left text-sm">Observation</th>
-                    <th className="px-4 py-3 text-left text-sm">Bureaux destinataires</th>
-                    <th className="px-4 py-3 text-left text-sm w-36">État</th>
+                    <th className="px-4 py-3 text-center text-sm">N° d'enregistrement</th>
+                    <th className="px-4 py-3 text-center text-sm">Date de l'arrivée</th>
+                    <th className="px-4 py-3 text-center text-sm">Provenance</th>
+                    <th className="px-4 py-3 text-center text-sm">N° de la correspondance</th>
+                    <th className="px-4 py-3 text-center text-sm">Date de la correspondance</th>
+                    <th className="px-4 py-3 text-center text-sm">Texte</th>
+                    <th className="px-4 py-3 text-center text-sm">Observation</th>
+                    <th className="px-4 py-3 text-center text-sm">Bureaux destinataires</th>
+                    <th className="px-4 py-3 text-center text-sm w-36">État</th>
                     <th className="px-4 py-3 text-center text-sm">Actions</th>
                   </tr>
                 </thead>

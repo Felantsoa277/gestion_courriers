@@ -10,6 +10,7 @@ import {
   FolderCog,
   UserCircle,
   Grid,
+  Home,
 } from "lucide-react";
 import {
   PieChart,
@@ -104,37 +105,38 @@ const DashboardPage = () => {
           </div>
 
           <nav className="flex-1 px-3 py-4 text-sm space-y-4 overflow-y-auto">
-            {/* 🔹 Section principale */}
+            {/* Section principale */}
             <div>
               <ul className="space-y-2">
+                <Link to="/accueil">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                  >
+                    <Home size={18} />{" "}
+                    {sidebarOpen && "Accueil"}
+                  </li>
+                </Link>
                 <Link to="/information">
                   <li
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition ${
                       darkMode
-                        ? "hover:bg-gray-700 text-gray-200"
-                        : "hover:bg-indigo-50 text-gray-800"
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
                     <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
                   </li>
                 </Link>
-                <Link to="/assignation">
-                  <li
-                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition ${
-                      darkMode
-                        ? "hover:bg-gray-700 text-gray-200"
-                        : "hover:bg-indigo-50 text-gray-800"
-                    }`}
-                  >
-                    <FolderCog size={18} />{" "}
-                    {sidebarOpen && "Assigner un courrier"}
-                  </li>
-                </Link>
+                
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition ${
                     darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
                   <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
@@ -147,8 +149,8 @@ const DashboardPage = () => {
                           ? "bg-gray-700 text-white"
                           : "bg-indigo-100 text-gray-800"
                         : darkMode
-                        ? "hover:bg-gray-700 text-gray-200"
-                        : "hover:bg-indigo-50 text-gray-800"
+                          ? "hover:bg-gray-700 text-gray-100"
+                          : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
                     <Grid size={18} /> {sidebarOpen && "Dashboard"}
@@ -159,7 +161,13 @@ const DashboardPage = () => {
 
             {/* 🔹 Mes dossiers */}
             <div>
-              <p className="font-semibold mt-3 text-indigo-500">Mes dossiers</p>
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
+                Mes dossiers
+              </p>
               <ul className="space-y-2 mt-1">
                 <Link to="/dossiers-affectes">
                   <li
@@ -186,9 +194,13 @@ const DashboardPage = () => {
               </ul>
             </div>
 
-            {/* 🔹 Dossiers des divisions */}
+            {/* Dossiers des divisions */}
             <div>
-              <p className="font-semibold mt-3 text-indigo-500">
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
                 Dossiers des divisions
               </p>
               <ul className="space-y-2 mt-1">

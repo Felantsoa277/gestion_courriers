@@ -402,7 +402,7 @@ const DossiersAffectes = () => {
                 enregistrés. ({filtered.length})
               </p>
               <p className="text-sm text-gray-500 mt-1">
-                Sélectionnez un enregistrement puis appuyez sur le bouton <strong>"Assigner"</strong> pour l'affecter vers une division.
+                Sélectionnez un enregistrement puis appuyez sur le bouton <strong>"Assigner"</strong> pour l'affecter vers une division, sur <strong>"Ajouter une observation"</strong> pour ajouter une observation.
               </p>
             </div>
 

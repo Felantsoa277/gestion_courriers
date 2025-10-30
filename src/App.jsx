@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { DarkModeProvider } from './pages/DarkModeContext'
 import InscriptionFormPage from './pages/InscriptionFormPage'
 import Modification from './pages/ModificationInfo'
 import Connexion from './pages/Login'
