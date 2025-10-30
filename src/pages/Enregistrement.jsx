@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Menu,
@@ -16,11 +17,12 @@ import {
   Search,
   Grid,
   CheckCircle2,
+  Home,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
 const Enregistrement = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
@@ -100,6 +102,18 @@ const Enregistrement = () => {
           <nav className="flex-1 px-3 py-4 text-sm space-y-4 overflow-y-auto">
             <div>
               <ul className="space-y-2">
+                <Link to="/accueil">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-200"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                  >
+                    <Home size={18} />{" "}
+                    {sidebarOpen && "Accueil"}
+                  </li>
+                </Link>
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
                     currentPage === "Arriver du courrier"
@@ -113,19 +127,6 @@ const Enregistrement = () => {
                 >
                   <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
                 </li>
-
-                <Link to="/assignation">
-                  <li
-                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
-                      darkMode
-                        ? "hover:bg-gray-700 text-gray-200"
-                        : "hover:bg-indigo-50 text-indigo-800"
-                    }`}
-                  >
-                    <FolderCog size={18} />{" "}
-                    {sidebarOpen && "Assigner un courrier"}
-                  </li>
-                </Link>
 
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
@@ -250,7 +251,7 @@ const Enregistrement = () => {
           {/* BOUTON MODE CLAIR/SOMBRE */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
               aria-label="toggle dark mode"
             >
@@ -270,7 +271,7 @@ const Enregistrement = () => {
                 } shadow-sm hover:shadow-md transition`}
               >
                 <Info size={18} />
-                <span className="font-medium">Informations</span>
+                <span className="font-medium">Enregistrement d'un courrier</span>
               </Link>
 
               <button

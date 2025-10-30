@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Menu,
@@ -15,7 +16,7 @@ import {
 import logo from "../assets/mef.png";
 
 const ObservationPage = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedOption, setSelectedOption] = useState("");
   const [autreObservation, setAutreObservation] = useState("");
@@ -231,7 +232,7 @@ const ObservationPage = () => {
           {/* Bouton mode clair/sombre */}
           <div className="absolute bottom-4 right-4">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
             >
               {darkMode ? <Sun size={22} /> : <Moon size={22} />}

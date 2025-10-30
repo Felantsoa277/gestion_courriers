@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import {Link} from "react-router-dom";
 import {
   Mail,
@@ -12,9 +13,8 @@ import {
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
-const Dashboard = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const toggleMode = () => setDarkMode(!darkMode);
+const Accueil = () => {
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
 
   const cards = [
     {
@@ -112,7 +112,7 @@ const Dashboard = () => {
 
       {/* BOUTON MODE */}
       <button
-        onClick={toggleMode}
+        onClick={toggleDarkMode}
         className="fixed bottom-5 right-5 p-3 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-all duration-300"
         aria-label="toggle dark mode"
       >
@@ -122,4 +122,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Accueil;

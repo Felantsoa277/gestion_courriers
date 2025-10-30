@@ -22,7 +22,8 @@ import ListeDossiersDivisions from './pages/ListeDossiersDivisions'
 import DepartDuCourrier from './pages/DepartCourrier'
 function App() {
   return (
-    <Router>
+    <DarkModeProvider>
+      <Router>
       <Routes>
         <Route path="/inscription-form" element={<InscriptionFormPage />} />
         <Route path="/modification-form" element={<Modification />} />
@@ -46,6 +47,7 @@ function App() {
         <Route path="/liste-dossiers-divisions" element={<ListeDossiersDivisions />} />
       </Routes>
     </Router>
+  </DarkModeProvider>
   )
 }
 

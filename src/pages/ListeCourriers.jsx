@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import { Link } from "react-router-dom";
 import {
   Menu,
@@ -20,7 +21,7 @@ import {
 import logo from "../assets/mef.png";
 
 const Informations = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const currentPage = "Arriver du courrier";
@@ -279,7 +280,7 @@ const Informations = () => {
           {/* BOUTON DARK MODE */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
               aria-label="toggle dark mode"
             >
@@ -395,13 +396,13 @@ const Informations = () => {
                         : "bg-indigo-100 text-indigo-900"
                     }`}
                   >
-                    <th className="px-4 py-3 text-left text-sm">N° d'enregistrement</th>
-                    <th className="px-4 py-3 text-left text-sm">Date de l'arrivée</th>
-                    <th className="px-4 py-3 text-left text-sm">Provenance</th>
-                    <th className="px-4 py-3 text-left text-sm">N° de la correspondance</th>
-                    <th className="px-4 py-3 text-left text-sm">Date de la correspondance</th>
-                    <th className="px-4 py-3 text-left text-sm">Texte</th>
-                    <th className="px-4 py-3 text-left text-sm w-36">État</th>
+                    <th className="px-4 py-3 text-center text-sm">N° d'enregistrement</th>
+                    <th className="px-4 py-3 text-center text-sm">Date de l'arrivée</th>
+                    <th className="px-4 py-3 text-center text-sm">Provenance</th>
+                    <th className="px-4 py-3 text-center text-sm">N° de la correspondance</th>
+                    <th className="px-4 py-3 text-center text-sm">Date de la correspondance</th>
+                    <th className="px-4 py-3 text-center text-sm">Texte</th>
+                    <th className="px-4 py-3 text-center text-sm w-36">État</th>
                     <th className="px-4 py-3 text-center text-sm">Actions</th>
                   </tr>
                 </thead>
@@ -426,15 +427,15 @@ const Informations = () => {
                             : "hover:bg-indigo-50"
                         }`}
                       >
-                        <td className="px-4 py-3 text-sm">{item.numero}</td>
-                        <td className="px-4 py-3 text-sm">{item.dateArrivee}</td>
-                        <td className="px-4 py-3 text-sm">{item.provenance}</td>
-                        <td className="px-4 py-3 text-sm">{item.numeroCorrespondance}</td>
-                        <td className="px-4 py-3 text-sm">
+                        <td className="px-4 py-3 text-center text-sm">{item.numero}</td>
+                        <td className="px-4 py-3 text-center text-sm">{item.dateArrivee}</td>
+                        <td className="px-4 py-3 text-center text-sm">{item.provenance}</td>
+                        <td className="px-4 py-3 text-center text-sm">{item.numeroCorrespondance}</td>
+                        <td className="px-4 py-3 text-center text-sm">
                           {item.dateCorrespondance}
                         </td>
-                        <td className="px-4 py-3 text-sm">{item.texte}</td>
-                        <td className="px-4 py-3 text-sm">
+                        <td className="px-4 py-3 text-center text-sm">{item.texte}</td>
+                        <td className="px-4 py-3 text-center text-sm">
                           <span
                             className={`px-2 py-1 rounded-full text-sm ${
                               item.etat === "Traitée"

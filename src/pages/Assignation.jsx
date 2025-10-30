@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Menu,
@@ -17,7 +18,7 @@ import { jsPDF } from "jspdf";
 import logo from "../assets/mef.png";
 
 const Assignation = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedDest, setSelectedDest] = useState("");
   const [dossierNumero, setDossierNumero] = useState("");
@@ -137,7 +138,7 @@ const Assignation = () => {
 
           <nav className="flex-1 px-3 py-4 text-sm space-y-4 overflow-y-auto">
             {/* Courrier */}
-            <ul className="space-y-2">
+            <ul className="space-y-2">x
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
                     darkMode
@@ -266,7 +267,7 @@ const Assignation = () => {
           {/* Bouton mode clair/sombre */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
               aria-label="toggle dark mode"
             >
