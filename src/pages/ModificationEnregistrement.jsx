@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useCallback } from "react";
+import api from "../api";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Menu,
   Mail,
@@ -17,15 +18,19 @@ const ModificationEnregistrement = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [success, setSuccess] = useState(false);
+  const [errors , setErrors] = useState();
   const navigate = useNavigate();
+  const [isSubmiting , setIsSubmting] = useState(false);
+  // Route uses :id in App.jsx — map it to NumeroArrive for compatibility with backend
+  const { id: NumeroArrive } = useParams();
 
-  const [courrier, setCourrier] = useState({
-    dateReception: "",
-    provenance: "",
-    numero: "",
-    dateCorrespondance: "",
-    texte: "",
-    piecesJointes: "",
+  const [modifier, setModifier] = useState({
+    DateArrive: "",
+    Provenance: "",
+    numero_correspondance_arrive: "",
+    DateCorrespondanceArrive: "",
+    TexteCorespondanceArrive: "",
+    piece_jointe_arrive: "",
   });
 
   const currentPage = "Arriver du courrier";
@@ -33,17 +38,91 @@ const ModificationEnregistrement = () => {
   // 🔹 Gestion de la modification des champs
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCourrier((prev) => ({ ...prev, [name]: value }));
+    setModifier((prev) => ({ ...prev, [name]: value }));
   };
 
-  // 🔹 Soumission du formulaire
-  const handleSubmit = (e) => {
+  // Soumission du formulaire
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess(true);
-    setTimeout(() => {
-      navigate("/information");
-    }, 2500);
+    setIsSubmting(true);
+    try {
+      console.log(modifier);
+      // Send update to the backend (adjust endpoint/method if your API expects PUT)
+      const response = await api.post(`/modification_arrive/${NumeroArrive}`, modifier);
+      console.log(response);
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/information");
+      }, 2500);
+    } catch (error) {
+      if (error.response && error.response.status === 422) {
+        console.log(error);
+        setErrors(error.response.data.message);
+      } else {
+        setErrors('Il y a quelque chose qui cloche');
+      }
+    } finally {
+      setIsSubmting(false);
+    }
   };
+
+
+  const getArriveById = useCallback(async () => {
+    try {
+      const response = await api.get(`/modifier_arrive/${NumeroArrive}`);
+      const data = response.data;
+      // Robust formatter to produce yyyy-MM-dd for <input type="date">
+      const fmt = (v) => {
+        if (!v && v !== 0) return "";
+        // If already in YYYY-MM-DD form
+        if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+        // Handle ISO strings with time and optional microseconds/timezone like 2025-10-26T00:00:00.000000Z
+        if (typeof v === 'string') {
+          const isoMatch = v.match(/^(\d{4}-\d{2}-\d{2})T/);
+          if (isoMatch) return isoMatch[1];
+          // Try Date parse fallback
+          const d = new Date(v);
+          if (!isNaN(d)) return d.toISOString().slice(0, 10);
+          return '';
+        }
+        // If it's a Date object
+        if (v instanceof Date) {
+          if (!isNaN(v)) return v.toISOString().slice(0, 10);
+          return '';
+        }
+        // As last resort, try to coerce to date
+        try {
+          const d = new Date(String(v));
+          if (!isNaN(d)) return d.toISOString().slice(0, 10);
+        } catch {
+          // noop
+        }
+        return '';
+      };
+
+      // Helpful debug info when developing
+      console.debug('modifier GET response data:', data);
+
+      setModifier({
+        DateArrive: fmt(data.DateArrive) || "",
+        Provenance: data.Provenance || "",
+        numero_correspondance_arrive: data.numero_correspondance_arrive || "",
+        DateCorrespondanceArrive: fmt(data.DateCorrespondanceArrive) || "",
+        TexteCorespondanceArrive: data.TexteCorespondanceArrive || "",
+        piece_jointe_arrive: data.piece_jointe_arrive || "",
+      });
+    } catch (error) {
+      console.error('Erreur getArriveById:', error);
+      setErrors('Impossible de récupérer les données du courrier.');
+    }
+  }, [NumeroArrive]);
+
+  // Trigger fetching after getArriveById is defined
+  useEffect(() => {
+    if (NumeroArrive) {
+      getArriveById();
+    }
+  }, [getArriveById, NumeroArrive]);
 
   return (
     <div
@@ -169,7 +248,10 @@ const ModificationEnregistrement = () => {
           </div>
 
           {/* FORMULAIRE */}
+          {errors &&
+            <div className="alert alert-danger">{errors}</div>}
           <div
+
             className={`rounded-xl shadow-lg overflow-hidden ${
               darkMode ? "bg-gray-800" : "bg-white"
             }`}
@@ -204,8 +286,8 @@ const ModificationEnregistrement = () => {
                 </label>
                 <input
                   type="date"
-                  name="dateReception"
-                  value={courrier.dateReception}
+                  name="DateArrive"
+                  value={modifier.DateArrive}
                   onChange={handleChange}
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
@@ -219,8 +301,8 @@ const ModificationEnregistrement = () => {
                 <label className="text-xl font-semibold mb-1">Provenance</label>
                 <input
                   type="text"
-                  name="provenance"
-                  value={courrier.provenance}
+                  name="Provenance"
+                  value={modifier.Provenance}
                   onChange={handleChange}
                   placeholder="Ex: Ministère de l'Économie"
                   className={`px-3 py-2 rounded-lg border ${
@@ -236,11 +318,10 @@ const ModificationEnregistrement = () => {
                   Numéro de la correspondance
                 </label>
                 <input
-                  type="text"
-                  name="numero"
-                  value={courrier.numero}
+                  name="numero_correspondance_arrive"
+                  type="number"
+                  value={modifier.numero_correspondance_arrive}
                   onChange={handleChange}
-                  placeholder="Ex: CORR-2025-001"
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -255,8 +336,8 @@ const ModificationEnregistrement = () => {
                 </label>
                 <input
                   type="date"
-                  name="dateCorrespondance"
-                  value={courrier.dateCorrespondance}
+                  name="DateCorrespondanceArrive"
+                  value={modifier.DateCorrespondanceArrive}
                   onChange={handleChange}
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
@@ -270,8 +351,8 @@ const ModificationEnregistrement = () => {
                 <label className="text-xl font-semibold mb-1">Texte</label>
                 <input
                   type="text"
-                  name="texte"
-                  value={courrier.texte}
+                  name="TexteCorespondanceArrive"
+                  value={modifier.TexteCorespondanceArrive}
                   onChange={handleChange}
                   placeholder="Objet du courrier"
                   className={`px-3 py-2 rounded-lg border ${
@@ -284,12 +365,12 @@ const ModificationEnregistrement = () => {
 
               <div className="flex flex-col">
                 <label className="text-xl font-semibold mb-1">
-                  Pièces jointes
+                  Nombre de pièces jointes
                 </label>
                 <input
-                  type="text"
-                  name="piecesJointes"
-                  value={courrier.piecesJointes}
+                  type="number"
+                  name="piece_jointe_arrive"
+                  value={modifier.piece_jointe_arrive}
                   onChange={handleChange}
                   placeholder="Texte des pièces jointes"
                   className={`px-3 py-2 rounded-lg border ${
@@ -302,12 +383,21 @@ const ModificationEnregistrement = () => {
 
               {/* Boutons */}
               <div className="col-span-1 md:col-span-2 flex flex-col items-center mt-6 gap-3">
+                {isSubmiting ?
+                <button
+                  type="button"
+                  className="bg-indigo-600 text-white w-100 px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-medium"
+                >
+                  Modification...
+                </button> 
+                :
                 <button
                   type="submit"
                   className="bg-indigo-600 text-white w-100 px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-medium"
                 >
                   Mettre à jour
-                </button>
+                </button>}
+                
                 <Link to="/information">
                 <button
                   className="bg-gray-200 text-black w-100 px-6 py-2 rounded-lg hover:bg-gray-300 font-medium"

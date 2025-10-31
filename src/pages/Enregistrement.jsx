@@ -1,3 +1,4 @@
+import api from "../api";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -24,16 +25,46 @@ const Enregistrement = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+  const [isSubmiting , setIsSubmting] = useState(false);
+  const [errors , setErrors] = useState();
+  const [ajouter , setAjouter] = useState({
+    DateArrive:"",
+    Provenance:"",
+    numero_correspondance_arrive:"",
+    DateCorrespondanceArrive:"",
+    TexteCorespondanceArrive:"",
+    piece_jointe_arrive:""
+  });
 
   const currentPage = "Arriver du courrier";
 
   // Soumission du formulaire
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess(true);
-    setTimeout(() => {
-      navigate("/information");
-    }, 2500);
+    setIsSubmting(true);
+    try {
+      console.log(ajouter);
+      const response = await api.post('/ajouter_arrive', ajouter);
+      console.log(response);
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/information");
+      }, 2500);
+    } catch (error) {
+        if(error.response.status===422){
+          console.log(error);
+          setErrors(error.response.data.message);
+        } else{
+            setErrors('Il y a quelque chose qui cloche');
+        }
+    } finally{
+        setIsSubmting(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setAjouter((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -313,6 +344,9 @@ const Enregistrement = () => {
             </div>
 
             {/* FORMULAIRE */}
+            {errors &&
+            <div className="alert alert-danger">{errors}</div>}
+
             <form
               onSubmit={handleSubmit}
               className="p-6 grid grid-cols-1 md:grid-cols-2 gap-10"
@@ -322,7 +356,10 @@ const Enregistrement = () => {
                   Date de réception
                 </label>
                 <input
+                  name="DateArrive"
                   type="date"
+                  value={ajouter.DateArrive}
+                  onChange={handleChange}
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -334,7 +371,10 @@ const Enregistrement = () => {
               <div className="flex flex-col">
                 <label className="text-xl font-semibold mb-1">Provenance</label>
                 <input
+                  name="Provenance"
                   type="text"
+                  value={ajouter.Provenance}
+                  onChange={handleChange}
                   placeholder="Ex: Ministère de l'Économie"
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
@@ -349,8 +389,10 @@ const Enregistrement = () => {
                   Numéro de la correspondance
                 </label>
                 <input
-                  type="text"
-                  placeholder="Ex: CORR-2025-001"
+                  name="numero_correspondance_arrive"
+                  type="number"
+                  value={ajouter.numero_correspondance_arrive}
+                  onChange={handleChange}
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -364,7 +406,10 @@ const Enregistrement = () => {
                   Date de la correspondance
                 </label>
                 <input
+                  name="DateCorrespondanceArrive"
                   type="date"
+                  value={ajouter.DateCorrespondanceArrive}
+                  onChange={handleChange}
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -376,7 +421,10 @@ const Enregistrement = () => {
               <div className="flex flex-col">
                 <label className="text-xl font-semibold mb-1">Texte</label>
                 <input
+                  name="TexteCorespondanceArrive"
                   type="text"
+                  value={ajouter.TexteCorespondanceArrive}
+                  onChange={handleChange}
                   placeholder="Objet du courrier"
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
@@ -391,8 +439,11 @@ const Enregistrement = () => {
                   Pièces jointes
                 </label>
                 <input
-                  type="text"
-                  placeholder="texte des pièces jointes"
+                  name="piece_jointe_arrive"
+                  type="number"
+                  value={ajouter.piece_jointe_arrive}
+                  onChange={handleChange}
+                  placeholder="Nombre de pièces jointes"
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -403,12 +454,20 @@ const Enregistrement = () => {
 
               {/* Boutons */}
               <div className="col-span-1 md:col-span-2 flex flex-col items-center mt-6 gap-3">
+                {isSubmiting ?
+                <button
+                  type="button"
+                  className="bg-indigo-600 text-white w-100 px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-medium"
+                >
+                  Enregistrement...
+                </button> 
+                :
                 <button
                   type="submit"
                   className="bg-indigo-600 text-white w-100 px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-medium"
                 >
                   Enregistrer
-                </button>
+                </button> }
                 <Link to="/information">
                   <button className="bg-gray-200 text-black w-100 px-6 py-2 rounded-lg hover:bg-gray-300 font-medium">
                     Annuler

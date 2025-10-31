@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+
+
+import api from "../api";
+import React, { useEffect ,useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Menu,
@@ -21,6 +24,7 @@ import logo from "../assets/mef.png";
 const Informations = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [courriers, setCourriers] = useState([]);
 
   const currentPage = "Arriver du courrier";
 
@@ -30,42 +34,68 @@ const Informations = () => {
   const [filterNumeroCorr, setFilterNumeroCorr] = useState("");
   const [filterTexte, setFilterTexte] = useState("");
 
-  const enregistrements = [
-    {
-      id: 1,
-      numero: "ENR-2024-001",
-      dateArrivee: "08/10/2025",
-      provenance: "Ministère Finance",
-      numeroCorrespondance: "CORR-2024-456",
-      dateCorrespondance: "05/10/2025",
-      texte: "Demande de budget",
-      etat: "En attente",
-    },
-    {
-      id: 2,
-      numero: "ENR-2024-002",
-      dateArrivee: "07/10/2025",
-      provenance: "Préfecture",
-      numeroCorrespondance: "CORR-2024-457",
-      dateCorrespondance: "06/10/2025",
-      texte: "Rapport annuel",
-      etat: "Traitée",
-    },
-  ];
+  // Helper to format various date representations into YYYY-MM-DD for display
+  const formatDate = (v) => {
+    if (v === null || v === undefined || v === "") return "";
+    // If already YYYY-MM-DD
+    if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+    // ISO-like string (with time): extract date portion before 'T'
+    if (typeof v === 'string') {
+      const m = v.match(/^(\d{4}-\d{2}-\d{2})T/);
+      if (m) return m[1];
+      // Fallback: try to parse
+      const d = new Date(v);
+      if (!isNaN(d)) return d.toISOString().slice(0, 10);
+      return v;
+    }
+    if (v instanceof Date) {
+      if (!isNaN(v)) return v.toISOString().slice(0, 10);
+      return "";
+    }
+    // Last resort: coerce to Date
+    try {
+      const d = new Date(String(v));
+      if (!isNaN(d)) return d.toISOString().slice(0, 10);
+    } catch {
+      // noop
+    }
+    return String(v);
+  };
+
+  useEffect(() => {
+    api.get("/affichage")
+      .then((res) => {
+        console.log("Données reçues :", res.data);
+        setCourriers(res.data); // On stocke les résultats dans un état pour les afficher
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  //fonction supprimer
+  const supprimerCourrier = async (NumeroArrive) => {
+    if (!window.confirm('Confirmer la suppression de l\'enregistrement #' + NumeroArrive + ' ?')) {
+      return;
+    }
+
+    try {
+      // Note: endpoint expects DELETE /supprimer_arrive/{NumeroArrive}
+      await api.delete(`/supprimer_arrive/${NumeroArrive}`);
+      setCourriers((prev) => prev.filter((c) => c.NumeroArrive !== NumeroArrive));
+    } catch (error) {
+      console.error('Erreur suppression courrier:', error);
+      alert('Impossible de supprimer le courrier. Voir la console pour plus de détails.');
+    }
+  };
 
   // Fonction de filtrage
-  const filtered = enregistrements.filter((e) => {
-    return (
-      (!filterProvenance ||
-        e.provenance.toLowerCase().includes(filterProvenance.toLowerCase())) &&
-      (!filterDateArrivee || e.dateArrivee === filterDateArrivee) &&
-      (!filterNumeroCorr ||
-        e.numeroCorrespondance
-          .toLowerCase()
-          .includes(filterNumeroCorr.toLowerCase())) &&
-      (!filterTexte || e.texte.toLowerCase().includes(filterTexte.toLowerCase()))
-    );
-  });
+  /*const filtered = courriers.filter(courrier =>
+    courrier.Provenance.toLowerCase().includes(filterProvenance.toLowerCase()) ||
+    courrier.DateArrive.includes(filterDateArrivee) ||
+    courrier.numero_correspondance_arrive.toLowerCase().includes(filterNumeroCorr.toLowerCase()) ||
+    courrier.TexteCorespondanceArrive.toLowerCase().includes(filterTexte.toLowerCase()
+  ));*/
 
   return (
     <div
@@ -381,7 +411,7 @@ const Informations = () => {
                 Listes des enregistrements
               </h2>
               <p className="text-sm text-gray-500 mt-1">
-                Visualisez et gérez les courriers enregistrés. ({filtered.length})
+                Visualisez et gérez les courriers enregistrés. ({courriers.length})
               </p>
             </div>
 
@@ -399,6 +429,7 @@ const Informations = () => {
                     <th className="px-4 py-3 text-left text-sm">Date de l'arrivée</th>
                     <th className="px-4 py-3 text-left text-sm">Provenance</th>
                     <th className="px-4 py-3 text-left text-sm">N° de la correspondance</th>
+                    <th className="px-4 py-3 text-left text-sm">Piece jointes</th>
                     <th className="px-4 py-3 text-left text-sm">Date de la correspondance</th>
                     <th className="px-4 py-3 text-left text-sm">Texte</th>
                     <th className="px-4 py-3 text-left text-sm w-36">État</th>
@@ -407,7 +438,7 @@ const Informations = () => {
                 </thead>
 
                 <tbody>
-                  {filtered.length === 0 ? (
+                  {courriers.length === 0 ? (
                     <tr>
                       <td
                         colSpan={9}
@@ -417,29 +448,28 @@ const Informations = () => {
                       </td>
                     </tr>
                   ) : (
-                    filtered.map((item) => (
+                    courriers.map((item) => (
                       <tr
-                        key={item.id}
+                        key={item.NumeroArrive}
                         className={`border-b ${
                           darkMode
                             ? "border-gray-700 hover:bg-gray-700"
                             : "hover:bg-indigo-50"
                         }`}
                       >
-                        <td className="px-4 py-3 text-sm">{item.numero}</td>
-                        <td className="px-4 py-3 text-sm">{item.dateArrivee}</td>
-                        <td className="px-4 py-3 text-sm">{item.provenance}</td>
-                        <td className="px-4 py-3 text-sm">{item.numeroCorrespondance}</td>
-                        <td className="px-4 py-3 text-sm">
-                          {item.dateCorrespondance}
-                        </td>
-                        <td className="px-4 py-3 text-sm">{item.texte}</td>
+                        <td className="px-4 py-3 text-sm">{item.NumeroArrive}</td>
+                        <td className="px-4 py-3 text-sm">{formatDate(item.DateArrive)}</td>
+                        <td className="px-4 py-3 text-sm">{item.Provenance}</td>
+                        <td className="px-4 py-3 text-sm">{item.numero_correspondance_arrive}</td>
+                        <td className="px-4 py-3 text-sm">{item.piece_jointe_arrive}</td>
+                        <td className="px-4 py-3 text-sm">{formatDate(item.DateCorrespondanceArrive)}</td>
+                        <td className="px-4 py-3 text-sm">{item.TexteCorespondanceArrive}</td>
                         <td className="px-4 py-3 text-sm">
                           <span
                             className={`px-2 py-1 rounded-full text-sm ${
-                              item.etat === "Traitée"
-                                ? "bg-green-200 text-green-800"
-                                : "bg-yellow-200 text-yellow-800"
+                              item.etat === "En attente"
+                                ? "bg-yellow-200 text-yellow-800"
+                                : "bg-green-200 text-green-800"
                             }`}
                           >
                             {item.etat}
@@ -447,7 +477,7 @@ const Informations = () => {
                         </td>
                         <td className="px-4 py-3 text-center">
                           <div className="flex items-center justify-center gap-3">
-                            <Link to={`/modification/${item.id}`}>
+                            <Link to={`/modification/${item.NumeroArrive}`}>
                               <button
                                 className="text-green-600 hover:text-green-800"
                                 aria-label="modifier"
@@ -455,11 +485,8 @@ const Informations = () => {
                                 <Edit size={18} />
                               </button>
                             </Link>
-                            <button
-                              className="text-red-600 hover:text-red-800"
-                              aria-label="supprimer"
-                            >
-                              <Trash2 size={18} />
+                            <button onClick={() => supprimerCourrier(item.NumeroArrive)} className="text-red-600 hover:text-red-800" aria-label="supprimer">
+                              <Trash2 size={18}/>
                             </button>
                           </div>
                         </td>
