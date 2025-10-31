@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import { Link } from "react-router-dom";
 import {
   Menu,
@@ -11,11 +12,12 @@ import {
   Trash2,
   Pencil,
   Info,
+  Home,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
 const DossiersSuivis = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // États pour les filtres
@@ -23,6 +25,9 @@ const DossiersSuivis = () => {
   const [filterDateArrivee, setFilterDateArrivee] = useState("");
   const [filterNumeroCorr, setFilterNumeroCorr] = useState("");
   const [filterTexte, setFilterTexte] = useState("");
+
+  // 🔹 État pour la ligne sélectionnée
+  const [selectedId, setSelectedId] = useState(null);
 
   const currentPage = "Dossier suivis";
 
@@ -67,6 +72,11 @@ const DossiersSuivis = () => {
     );
   });
 
+  // Fonction de sélection/désélection
+  const handleRowClick = (id) => {
+    setSelectedId(selectedId === id ? null : id);
+  };
+
   return (
     <div
       className={`flex flex-col min-h-screen transition-colors duration-300 ${
@@ -95,10 +105,10 @@ const DossiersSuivis = () => {
       </header>
 
       {/* LAYOUT */}
-      <div className="flex flex-1 pt-24">
+      <div className="flex flex-1">
         {/* SIDEBAR */}
         <aside
-          className={`flex flex-col transition-all duration-300 ${
+          className={`fixed h-full flex flex-col transition-all duration-300 pt-30 border-r ${
             sidebarOpen ? "w-64" : "w-24"
           } ${
             darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900"
@@ -118,16 +128,7 @@ const DossiersSuivis = () => {
           <nav className="flex-1 px-3 py-4 text-sm space-y-4 overflow-y-auto">
             <div>
               <ul className="space-y-2">
-                <Link to="/information">
-                  <li
-                    className={`p-2 rounded-md flex items-center gap-3 font-medium transition ${
-                      darkMode ? "hover:bg-gray-700 text-gray-200" : "hover:bg-indigo-50 text-gray-800"
-                    }`}
-                  >
-                    <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
-                  </li>
-                </Link>
-                <Link to="/assignation">
+                <Link to="/accueil">
                   <li
                     className={`p-2 rounded-md flex items-center gap-3 font-medium transition ${
                       currentPage === "Assigner un courrier"
@@ -135,17 +136,31 @@ const DossiersSuivis = () => {
                           ? "bg-gray-700 text-white"
                           : "bg-indigo-100 text-gray-800"
                         : darkMode
-                        ? "hover:bg-gray-700 text-gray-200"
-                        : "hover:bg-indigo-50 text-gray-800"
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
-                    <Folder size={18} /> {sidebarOpen && "Assigner un courrier"}
+                    <Home size={18} /> {sidebarOpen && "Accueil"}
                   </li>
                 </Link>
-                <Link to="#">
+                <Link to="/information">
                   <li
                     className={`p-2 rounded-md flex items-center gap-3 font-medium transition ${
-                      darkMode ? "hover:bg-gray-700 text-gray-200" : "hover:bg-indigo-50 text-gray-800"
+                      darkMode 
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                  >
+                    <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
+                  </li>
+                </Link>
+                
+                <Link to="/informationdepart">
+                  <li
+                    className={`p-2 rounded-md flex items-center gap-3 font-medium transition ${
+                      darkMode 
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
                     <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
@@ -154,7 +169,9 @@ const DossiersSuivis = () => {
                 <Link to="/dashboard">
                   <li
                     className={`p-2 rounded-md flex items-center gap-3 font-medium transition ${
-                      darkMode ? "hover:bg-gray-700 text-gray-200" : "hover:bg-indigo-50 text-gray-800"
+                      darkMode 
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
                     <Grid size={18} /> {sidebarOpen && "Dashboard"}
@@ -164,7 +181,13 @@ const DossiersSuivis = () => {
             </div>
 
             <div>
-              <p className="font-semibold mt-3">{sidebarOpen && "Mes dossiers"}</p>
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
+                Mes dossiers
+              </p>
               <ul className="space-y-2 mt-1">
                 <Link to="/dossiers-affectes">
                   <li
@@ -180,8 +203,8 @@ const DossiersSuivis = () => {
                     className={`p-2 rounded-md flex items-center gap-2 font-medium transition ${
                       currentPage === "Dossier suivis"
                         ? darkMode
-                          ? "bg-gray-700 text-white"
-                          : "bg-indigo-100 text-gray-800"
+                          ? "bg-indigo-900 text-indigo-200"
+                        : "bg-indigo-100 text-indigo-800"
                         : darkMode
                         ? "hover:bg-gray-700 text-gray-200"
                         : "hover:bg-indigo-50 text-gray-800"
@@ -194,7 +217,13 @@ const DossiersSuivis = () => {
             </div>
 
             <div>
-              <p className="font-semibold mt-3">{sidebarOpen && "Dossiers des divisions"}</p>
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
+                Dossiers des divisions
+              </p>
               <ul className="space-y-2 mt-1">
                 <Link to="/dossiers-divisions">
                   <li
@@ -229,11 +258,11 @@ const DossiersSuivis = () => {
         </aside>
 
         {/* MAIN */}
-        <main className="flex-1 p-6 overflow-auto relative">
+        <main className="flex-1 p-6 ml-65 mr-1 overflow-auto pt-30 relative">
           {/* Bouton dark mode */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
             >
               {darkMode ? <Sun size={22} /> : <Moon size={22} />}
@@ -252,9 +281,13 @@ const DossiersSuivis = () => {
                 <Info size={18} /> <span className="font-medium">Informations</span>
               </Link>
               <Link
-                to="/modif-observation"
+                to={selectedId ? `/assignation/${selectedId}` : "#"}
                 className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
-                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-indigo-100 text-indigo-800"
+                  selectedId
+                    ? darkMode
+                      ? "bg-gray-700 border-gray-600 text-gray-100"
+                      : "bg-white border-indigo-100 text-indigo-800"
+                    : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
                 } shadow-sm hover:shadow-md transition`}
               >
                 <Pencil size={18} /> <span className="font-medium">Modifier l'observation</span>
@@ -309,8 +342,8 @@ const DossiersSuivis = () => {
           {/* Tableau */}
           <div className={`rounded-xl shadow-lg overflow-hidden ${darkMode ? "bg-gray-800" : "bg-white"}`}>
             <div className="p-6 border-b" style={{ borderColor: darkMode ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.03)" }}>
-              <h2 className={`text-2xl font-semibold ${darkMode ? "text-white" : "text-indigo-800"}`}>Listes des enregistrements</h2>
-              <p className="text-sm text-gray-500 mt-1">Sélectionner un enregistrement puis appuyer sur "Modifier l'observation".</p>
+              <h2 className={`text-2xl font-semibold ${darkMode ? "text-white" : "text-indigo-800"}`}>Listes des courriers suivis</h2>
+              <p className="text-sm text-gray-500 mt-1">Sélectionnez un enregistrement puis appuyer sur <strong>"Modifier l'observation"</strong> pour modifier son observation.</p>
             </div>
 
             <div className="p-4 overflow-x-auto">
@@ -338,7 +371,19 @@ const DossiersSuivis = () => {
                     </tr>
                   ) : (
                     filtered.map((item) => (
-                      <tr key={item.id} className={`border-b ${darkMode ? "border-gray-700 hover:bg-gray-700" : "hover:bg-indigo-50"}`}>
+                      <tr
+                        key={item.id}
+                        onClick={() => handleRowClick(item.id)}
+                        className={`border-b cursor-pointer ${
+                          darkMode
+                            ? selectedId === item.id
+                              ? "bg-indigo-900"
+                              : "border-gray-700 hover:bg-gray-700"
+                            : selectedId === item.id
+                            ? "bg-indigo-200"
+                            : "hover:bg-indigo-50"
+                        }`}
+                      >
                         <td className="px-4 py-3 text-sm">{item.numero}</td>
                         <td className="px-4 py-3 text-sm">{item.dateArrivee}</td>
                         <td className="px-4 py-3 text-sm">{item.provenance}</td>
@@ -348,12 +393,18 @@ const DossiersSuivis = () => {
                         <td className="px-4 py-3 text-sm">{item.bureau}</td>
                         <td className="px-4 py-3 text-sm">{item.observation}</td>
                         <td className="px-4 py-3 text-sm">
-                          <span className={`px-2 py-1 rounded-full text-sm ${item.etat === "Traitée" ? "bg-green-200 text-green-800" : "bg-yellow-200 text-yellow-800"}`}>
+                          <span
+                            className={`px-2 py-1 rounded-full text-sm ${
+                              item.etat === "Traitée"
+                                ? "bg-green-200 text-green-800"
+                                : "bg-yellow-200 text-yellow-800"
+                            }`}
+                          >
                             {item.etat}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-center">
-                          <button className="text-red-600 hover:text-red-800" aria-label="supprimer"><Trash2 size={25} /></button>
+                        <td className="px-4 py-3 text-center flex justify-center gap-2">
+                          <button className="px-2 py-1 mt-3 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={20} /></button>
                         </td>
                       </tr>
                     ))

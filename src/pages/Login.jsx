@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import { Mail, Lock, User, FolderCog, ArrowLeft, EyeClosed, Eye } from "lucide-react";
+import { motion } from "framer-motion";
 import logo from "../assets/mef.png";
 
 const Connexion = () => {
@@ -38,15 +39,20 @@ const Connexion = () => {
           <button className="flex items-center hover:text-indigo-200 transition">
             <ArrowLeft size={26} className="mr-2" />
           </button>
-          <h1
-          className="relative text-2xl font-semibold tracking-wide top-125 right-10 text-transparent bg-clip-text"
-          style={{
-            backgroundImage:
-            "linear-gradient(90deg, rgb(255, 215, 0), rgb(255, 200, 50), rgb(255, 170, 0))",
-          }}
+
+          {/* Effet de glissement pour le titre */}
+          <motion.h1
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="relative text-2xl font-semibold tracking-wide top-125 right-10 text-transparent bg-clip-text"
+            style={{
+              backgroundImage:
+                "linear-gradient(90deg, rgb(255, 215, 0), rgb(255, 200, 50), rgb(255, 170, 0))",
+            }}
           >
             Système d'Information Integré de Gestion des Courriers
-          </h1>
+          </motion.h1>
         </div>
 
       {/* Left: Form */}
@@ -55,9 +61,7 @@ const Connexion = () => {
           <h2 className="text-gray-700 text-xl font-semibold mb-8 text-center">
             Se connecter
           </h2>
-          {/* <h5 className="text-gray-300 text-1 mb-4 text-center ">
-            Veuillez remplir les informations ci_dessous
-          </h5> */}
+
           <form className="flex flex-col gap-4">
 
             <div className="flex flex-col">
@@ -101,15 +105,19 @@ const Connexion = () => {
             <Link to="/inscription-form" className="text-indigo-600 hover:underline">
               S'inscrire
             </Link>
-            
           </p>
         </div>
       </div>
 
-      {/* Illustration logo */}
-      <div className="absolute bottom-65 right-58 w-[320px] opacity-100">
+      {/* Illustration logo avec effet de glissement */}
+      <motion.div
+        initial={{ x: 100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+        className="absolute bottom-65 right-58 w-[320px] opacity-100"
+      >
         <img src={logo} alt="logo de la Mef" className="w-full" />
-      </div>
+      </motion.div>
     </div>
     </div>
   );

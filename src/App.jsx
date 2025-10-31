@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { DarkModeProvider } from './pages/DarkModeContext'
 import InscriptionFormPage from './pages/InscriptionFormPage'
 import Modification from './pages/ModificationInfo'
 import Connexion from './pages/Login'
@@ -18,10 +19,12 @@ import DossiersSansAffectataires from './pages/DossiersSansAffectataires'
 import DossiersClasses from './pages/DossiersClassés'
 import DossiersDivisions from './pages/DossiersDivisions'
 import ListeDossiersDivisions from './pages/ListeDossiersDivisions'
-import DepartDuCourrier from './pages/DepartCourrier'
+import DepartCourrier from './pages/DepartCourrier'
+import EnregistrementDepart from './pages/EnregistrementDepart'
 function App() {
   return (
-    <Router>
+    <DarkModeProvider>
+      <Router>
       <Routes>
         <Route path="/inscription-form" element={<InscriptionFormPage />} />
         <Route path="/modification-form" element={<Modification />} />
@@ -29,7 +32,8 @@ function App() {
         <Route path="/profil" element={<ProfilPage />} />
         <Route path="/accueil" element={<Accueil />} />
         <Route path="/information" element={<Informations />} />
-        <Route path="/depart" element={<DepartDuCourrier />} />
+        <Route path="/informationdepart" element={<DepartCourrier />} />
+        <Route path="/enregistrementdepart" element={<EnregistrementDepart />} />
         <Route path="/modification/:id" element={<ModificationEnregistrement />} />
         <Route path="/enregistrement" element={<Enregistrement />} />
         <Route path="/observation-form" element={<ObservationPage />} />
@@ -45,6 +49,7 @@ function App() {
         <Route path="/liste-dossiers-divisions" element={<ListeDossiersDivisions />} />
       </Routes>
     </Router>
+  </DarkModeProvider>
   )
 }
 

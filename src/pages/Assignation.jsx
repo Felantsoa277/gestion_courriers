@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Menu,
@@ -11,12 +12,13 @@ import {
   FileText,
   FolderCog,
   CheckCircle2,
+  Home,
 } from "lucide-react";
 import { jsPDF } from "jspdf";
 import logo from "../assets/mef.png";
 
 const Assignation = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedDest, setSelectedDest] = useState("");
   const [dossierNumero, setDossierNumero] = useState("");
@@ -81,7 +83,7 @@ const Assignation = () => {
     doc.save(`fiche_assignation_${dossierNumero}.pdf`);
   };
 
-  const currentPage = "Assigner un courrier";
+  const currentPage = "Dossiers affectés";
 
   return (
     <div
@@ -113,7 +115,7 @@ const Assignation = () => {
 
       {/* LAYOUT */}
       <div className="flex flex-1 pt-24">
-        {/* SIDEBAR - adapté dark mode */}
+        {/* SIDEBAR */}
         <aside
           className={`${
             sidebarOpen ? "w-64" : "w-24"
@@ -136,51 +138,52 @@ const Assignation = () => {
 
           <nav className="flex-1 px-3 py-4 text-sm space-y-4 overflow-y-auto">
             {/* Courrier */}
-            <ul className="space-y-2">
+            <ul className="space-y-2">x
+                <li
+                  className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
+                    darkMode
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
+                  }`}
+                >
+                  <Link
+                    to="/accueil"
+                    className="flex items-center gap-2 w-full"
+                  >
+                    <Home size={18} />{" "}
+                    {sidebarOpen && "Accueil"}
+                  </Link>
+                </li>
               <Link to="/information">
                 <li
                   className={`p-2 rounded-md flex items-center gap-3 cursor-pointer font-medium transition duration-200 ease-in-out ${
                     darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
                   <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
                 </li>
               </Link>
 
-              <Link to="/assignation">
-                <li
-                  className={`p-2 rounded-md flex items-center gap-3 cursor-pointer font-medium transition duration-200 ease-in-out ${
-                    currentPage === "Assigner un courrier"
-                      ? darkMode
-                        ? "bg-gray-700 text-white"
-                        : "bg-indigo-100 text-gray-800"
-                      : darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
-                  }`}
-                >
-                  <FolderCog size={18} /> {sidebarOpen && "Assigner un courrier"}
-                </li>
-              </Link>
-
+              <Link to="/informationdepart">
               <li
                 className={`p-2 rounded-md flex items-center gap-3 cursor-pointer font-medium transition duration-200 ease-in-out ${
                   darkMode
-                    ? "hover:bg-gray-700 text-gray-200"
-                    : "hover:bg-indigo-50 text-gray-800"
+                    ? "hover:bg-gray-700 text-gray-100"
+                    : "hover:bg-indigo-50 text-indigo-800"
                 }`}
               >
                 <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
               </li>
+              </Link>
 
               <Link to="/dashboard">
                 <li
                   className={`p-2 rounded-md flex items-center gap-3 cursor-pointer font-medium transition duration-200 ease-in-out ${
                     darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
                   <Grid size={18} /> {sidebarOpen && "Dashboard"}
@@ -188,21 +191,32 @@ const Assignation = () => {
               </Link>
 
               {/* Mes dossiers */}
-              <p className="font-semibold mt-3 text-indigo-500">Mes dossiers</p>
-              <Link to="/dossiers-affectes">
+              <div>
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
+                Mes dossiers
+              </p>
+              <ul className="space-y-2 mt-1">
+                <Link to="/observation">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-2 font-medium transition duration-200 ease-in-out ${
+                      currentPage === "Dossier affectés"
+                        ? darkMode
+                          ? "bg-gray-700 text-white"
+                          : "bg-indigo-100 text-gray-800"
+                        : darkMode
+                        ? "hover:bg-gray-700 text-gray-200"
+                        : "hover:bg-indigo-50 text-gray-800"
+                    }`}
+                  >
+                    <Folder size={18} /> {sidebarOpen && "Dossiers affectés"}
+                  </li>
+                </Link>
                 <li
-                  className={`p-2 rounded-md flex items-center gap-2 cursor-pointer font-medium transition duration-200 ease-in-out ${
-                    darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
-                  }`}
-                >
-                  <Folder size={18} /> {sidebarOpen && "Dossiers affectés"}
-                </li>
-              </Link>
-              <Link to="/dossiers-suivis">
-                <li
-                  className={`p-2 rounded-md flex items-center gap-2 cursor-pointer font-medium transition duration-200 ease-in-out ${
+                  className={`p-2 rounded-md cursor-pointer flex items-center gap-2 font-medium transition duration-200 ease-in-out ${
                     darkMode
                       ? "hover:bg-gray-700 text-gray-200"
                       : "hover:bg-indigo-50 text-gray-800"
@@ -210,45 +224,39 @@ const Assignation = () => {
                 >
                   <Folder size={18} /> {sidebarOpen && "Dossiers suivis"}
                 </li>
-              </Link>
+              </ul>
+            </div>
 
               {/* Dossiers des divisions */}
-              <p className="font-semibold mt-3 text-indigo-500">
+<div>
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
                 Dossiers des divisions
               </p>
-              <Link to="/dossiers-divisions">
-                <li
-                  className={`p-2 rounded-md flex items-center gap-2 cursor-pointer font-medium transition duration-200 ease-in-out ${
-                    darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
-                  }`}
-                >
-                  <Folder size={18} /> {sidebarOpen && "Dossiers des divisions"}
-                </li>
-              </Link>
-              <Link to="/dossiers-sans-affectataires">
-                <li
-                  className={`p-2 rounded-md flex items-center gap-2 cursor-pointer font-medium transition duration-200 ease-in-out ${
-                    darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
-                  }`}
-                >
-                  <Folder size={18} /> {sidebarOpen && "Dossiers sans affectataires"}
-                </li>
-              </Link>
-              <Link to="/dossiers-classes">
-                <li
-                  className={`p-2 rounded-md flex items-center gap-2 cursor-pointer font-medium transition duration-200 ease-in-out ${
-                    darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
-                  }`}
-                >
-                  <Folder size={18} /> {sidebarOpen && "Dossiers archivés/classés"}
-                </li>
-              </Link>
+              <ul className="space-y-2 mt-1">
+                {[
+                  { path: "/dossiers-divisions", label: "Dossiers des divisions" },
+                  { path: "/dossiers-sans-affectataires", label: "Dossiers sans affectataires" },
+                  { path: "/dossiers-classes", label: "Dossiers archivés/classés" },
+                ].map((item) => (
+                  <li
+                    key={item.path}
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-2 font-medium transition duration-200 ease-in-out ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-200"
+                        : "hover:bg-indigo-50 text-gray-800"
+                    }`}
+                  >
+                    <Link to={item.path} className="flex items-center gap-2 w-full">
+                      <Folder size={18} /> {sidebarOpen && item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
             </ul>
           </nav>
         </aside>
@@ -261,7 +269,7 @@ const Assignation = () => {
           {/* Bouton mode clair/sombre */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
               aria-label="toggle dark mode"
             >

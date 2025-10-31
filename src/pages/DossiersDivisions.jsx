@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import { Link } from "react-router-dom";
 import {
   Menu,
@@ -11,11 +12,12 @@ import {
   UserCircle,
   Grid,
   FileText,
+  Home
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
 const DossiersDivisions = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const currentPage = "Dossier des divisions";
 
@@ -104,6 +106,18 @@ const DossiersDivisions = () => {
           <nav className="flex-1 px-3 py-4 text-sm space-y-4 overflow-y-auto">
             <div>
               <ul className="space-y-2">
+                <Link to="/accueil">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                  >
+                    <Home size={18} />{" "}
+                    {sidebarOpen && "Accueil"}
+                  </li>
+                </Link>
                 <Link to="/information">
                   <li
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
@@ -115,19 +129,7 @@ const DossiersDivisions = () => {
                     <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
                   </li>
                 </Link>
-                <Link to="/assignation">
-                  <li
-                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
-                      darkMode
-                        ? "hover:bg-gray-700 text-gray-100"
-                        : "hover:bg-indigo-50 text-indigo-800"
-                    }`}
-                  >
-                    <FolderCog size={18} />{" "}
-                    {sidebarOpen && "Assigner un courrier"}
-                  </li>
-                </Link>
-                <Link to="#">
+                <Link to="/informationdepart">
                   <li
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
                       darkMode
@@ -200,11 +202,11 @@ const DossiersDivisions = () => {
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-2 ${
                       currentPage === "Dossier des divisions"
                         ? darkMode
-                          ? "bg-indigo-900"
-                          : "bg-indigo-100"
+                        ? "bg-indigo-900 text-indigo-200"
+                        : "bg-indigo-100 text-indigo-800"
                         : darkMode
-                        ? "hover:bg-gray-700"
-                        : "hover:bg-indigo-50"
+                        ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
                     <Folder size={18} />{" "}
@@ -274,7 +276,7 @@ const DossiersDivisions = () => {
 
           <div className="absolute bottom-4 right-4 z-20">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
               aria-label="toggle dark mode"
             >

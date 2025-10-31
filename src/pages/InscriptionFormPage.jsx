@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, ArrowLeft, EyeClosed, Eye } from "lucide-react";
 import logo from "../assets/mef.png";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,11 +19,11 @@ const InscriptionFormPage = () => {
   };
 
   const navigate = useNavigate();
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      navigate("/accueil");
-    }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate("/accueil");
+  };
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden bg-white">
@@ -52,15 +52,20 @@ const InscriptionFormPage = () => {
           <button className="flex items-center hover:text-indigo-200 transition">
             <ArrowLeft size={26} className="mr-2" />
           </button>
-          <h1
-          className="relative text-2xl font-semibold tracking-wide top-125 right-10 text-transparent bg-clip-text"
-          style={{
-            backgroundImage:
-            "linear-gradient(90deg, rgb(255, 215, 0), rgb(255, 200, 50), rgb(255, 170, 0))",
-          }}
+
+          {/* Titre avec effet de glissement */}
+          <motion.h1
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="relative text-2xl font-semibold tracking-wide top-125 right-10 text-transparent bg-clip-text"
+            style={{
+              backgroundImage:
+                "linear-gradient(90deg, rgb(255, 215, 0), rgb(255, 200, 50), rgb(255, 170, 0))",
+            }}
           >
             Système d'Information Integré de Gestion des Courriers
-          </h1>
+          </motion.h1>
         </div>
 
         {/* Contenu en 2 colonnes */}
@@ -131,9 +136,7 @@ const InscriptionFormPage = () => {
                   <label className="text-gray-600 mb-1 text-lg font-medium">
                     Fonction
                   </label>
-                  <select
-                    className="border border-gray-300 rounded-xl p-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  >
+                  <select className="border border-gray-300 rounded-xl p-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="">Sélectionnez votre fonction</option>
                     <option value="chef">Chef de Service</option>
                     <option value="secretaire">Secrétaire</option>
@@ -152,14 +155,16 @@ const InscriptionFormPage = () => {
                     />
                     <input
                       type={showPassword ? "text" : "password"}
-                      placeholder= "********"
+                      placeholder="********"
                       onChange={handlePasswordChange}
                       className="border border-gray-300 rounded-xl p-1 pl-10 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
 
-                    <button type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
                       {showPassword ? <Eye size={18} /> : <EyeClosed size={18} />}
                     </button>
                   </div>
@@ -168,58 +173,75 @@ const InscriptionFormPage = () => {
                 {/* Confirmer mot de passe (affiché après saisie du mot de passe avec animation fade-in) */}
                 <AnimatePresence>
                   {showConfirmField && (
-                  <motion.div
-                    initial={{opacity: 0, y: 15}}
-                    animate={{opacity: 1, y: 0}}
-                    exit={{opacity: 0, y: 15}}
-                    transition={{duration: 0.5, ease: "easeOut"}}
-                    className="flex flex-col"
-                  >
-                    <div className="flex flex-col transition-opacity duration-500 ease-in-out">
-                    <label className="text-gray-600 mb-2 text-lg font-medium">
-                      Confirmer le mot de passe
-                    </label>
-                    <div className="relative">
-                      <Lock
-                        className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"
-                        size={20}
-                      />
-                      <input
-                        type={showConfirm ? "text" : "password"}
-                        placeholder= "********"
-                        className="border border-gray-300 rounded-xl p-2 pl-10 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      />
-                      <button 
-                      type="button"
-                      onClick={() => setShowConfirm(!showConfirm)}
-                      className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                        {showConfirm ? <Eye size={18} /> : <EyeClosed size={18} />}
-                      </button>
-                    </div>
-                  </div>
-                  </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 15 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                      className="flex flex-col"
+                    >
+                      <div className="flex flex-col transition-opacity duration-500 ease-in-out">
+                        <label className="text-gray-600 mb-2 text-lg font-medium">
+                          Confirmer le mot de passe
+                        </label>
+                        <div className="relative">
+                          <Lock
+                            className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400"
+                            size={20}
+                          />
+                          <input
+                            type={showConfirm ? "text" : "password"}
+                            placeholder="********"
+                            className="border border-gray-300 rounded-xl p-2 pl-10 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowConfirm(!showConfirm)}
+                            className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                          >
+                            {showConfirm ? (
+                              <Eye size={18} />
+                            ) : (
+                              <EyeClosed size={18} />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
                   )}
                 </AnimatePresence>
 
                 {/* Bouton */}
-                <button type="submit" onClick={handleSubmit} className="bg-green-700 text-white py-3 rounded-xl text-lg hover:bg-green-800 transition-colors mt-3 font-semibold">
+                <button
+                  type="submit"
+                  onClick={handleSubmit}
+                  className="bg-green-700 text-white py-3 rounded-xl text-lg hover:bg-green-800 transition-colors mt-3 font-semibold"
+                >
                   S’inscrire
                 </button>
               </form>
 
               <p className="text-base text-gray-600 mt-6 text-center">
                 Vous avez déjà un compte ?{" "}
-                <Link to="/connexion-form" className="text-indigo-600 font-medium hover:underline">
+                <Link
+                  to="/connexion-form"
+                  className="text-indigo-600 font-medium hover:underline"
+                >
                   Se connecter
                 </Link>
               </p>
             </div>
           </div>
 
-          {/* Illustration logo */}
-          <div className="absolute bottom-65 right-58 w-[320px] opacity-100">
+          {/* Illustration logo avec effet slide-in */}
+          <motion.div
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+            className="absolute bottom-65 right-58 w-[320px] opacity-100"
+          >
             <img src={logo} alt="logo de la Mef" className="w-full" />
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

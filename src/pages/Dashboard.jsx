@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import { Link } from "react-router-dom";
 import {
   Menu,
@@ -10,6 +11,7 @@ import {
   FolderCog,
   UserCircle,
   Grid,
+  Home,
 } from "lucide-react";
 import {
   PieChart,
@@ -27,7 +29,7 @@ import {
 import logo from "../assets/mef.png";
 
 const DashboardPage = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const currentPage = "Dashboard";
 
@@ -64,7 +66,7 @@ const DashboardPage = () => {
     >
       {/* HEADER */}
       <header
-        className={`flex items-center justify-between px-6 py-4 transition-colors duration-300 ${
+        className={`fixed w-full z-40 flex items-center justify-between px-6 py-4 transition-colors duration-300 ${
           darkMode ? "bg-gray-800 text-gray-100" : "bg-indigo-900 text-white"
         }`}
       >
@@ -89,8 +91,10 @@ const DashboardPage = () => {
         <aside
           className={`${
             sidebarOpen ? "w-64" : "w-24"
-          } flex flex-col transition-all duration-300 ${
-            darkMode ? "bg-gray-800 text-gray-200" : "bg-white text-gray-800"
+          } fixed h-full flex flex-col pt-30 transition-all duration-300 border-r ${
+            darkMode
+              ? "bg-gray-800 border-gray-700 text-gray-200"
+              : "bg-white border-gray-200 text-gray-800"
           }`}
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-300 dark:border-gray-700">
@@ -104,51 +108,54 @@ const DashboardPage = () => {
           </div>
 
           <nav className="flex-1 px-3 py-4 text-sm space-y-4 overflow-y-auto">
-            {/* 🔹 Section principale */}
+            {/* Section principale */}
             <div>
               <ul className="space-y-2">
+                <Link to="/accueil">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                  >
+                    <Home size={18} />{" "}
+                    {sidebarOpen && "Accueil"}
+                  </li>
+                </Link>
                 <Link to="/information">
                   <li
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition ${
                       darkMode
-                        ? "hover:bg-gray-700 text-gray-200"
-                        : "hover:bg-indigo-50 text-gray-800"
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
                     <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
                   </li>
                 </Link>
-                <Link to="/assignation">
-                  <li
-                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition ${
-                      darkMode
-                        ? "hover:bg-gray-700 text-gray-200"
-                        : "hover:bg-indigo-50 text-gray-800"
-                    }`}
-                  >
-                    <FolderCog size={18} />{" "}
-                    {sidebarOpen && "Assigner un courrier"}
-                  </li>
-                </Link>
+                
+                <Link to="/informationdepart">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition ${
                     darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
                   <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
                 </li>
+                </Link>
                 <Link to="/dashboard">
                   <li
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition ${
                       currentPage === "Dashboard"
                         ? darkMode
-                          ? "bg-gray-700 text-white"
-                          : "bg-indigo-100 text-gray-800"
+                          ? "bg-indigo-900 text-indigo-200"
+                        : "bg-indigo-100 text-indigo-800"
                         : darkMode
-                        ? "hover:bg-gray-700 text-gray-200"
-                        : "hover:bg-indigo-50 text-gray-800"
+                          ? "hover:bg-gray-700 text-gray-100"
+                          : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
                     <Grid size={18} /> {sidebarOpen && "Dashboard"}
@@ -159,7 +166,13 @@ const DashboardPage = () => {
 
             {/* 🔹 Mes dossiers */}
             <div>
-              <p className="font-semibold mt-3 text-indigo-500">Mes dossiers</p>
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
+                Mes dossiers
+              </p>
               <ul className="space-y-2 mt-1">
                 <Link to="/dossiers-affectes">
                   <li
@@ -186,9 +199,13 @@ const DashboardPage = () => {
               </ul>
             </div>
 
-            {/* 🔹 Dossiers des divisions */}
+            {/* Dossiers des divisions */}
             <div>
-              <p className="font-semibold mt-3 text-indigo-500">
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
                 Dossiers des divisions
               </p>
               <ul className="space-y-2 mt-1">
@@ -231,11 +248,13 @@ const DashboardPage = () => {
         </aside>
 
         {/* MAIN */}
-        <main className="flex-1 p-6 relative">
+        <main className={`flex-1 p-6 overflow-auto pt-30 transition-all duration-300 ${
+            sidebarOpen ? "ml-64" : "ml-24"
+          }`}>
           {/* Bouton clair/sombre */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
             >
               {darkMode ? <Sun size={22} /> : <Moon size={22} />}

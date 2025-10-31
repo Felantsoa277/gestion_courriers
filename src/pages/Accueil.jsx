@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import {Link} from "react-router-dom";
 import {
   Mail,
@@ -12,9 +13,8 @@ import {
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
-const Dashboard = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const toggleMode = () => setDarkMode(!darkMode);
+const Accueil = () => {
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
 
   const cards = [
     {
@@ -25,37 +25,37 @@ const Dashboard = () => {
       darkColor: "bg-indigo-800 text-indigo-100 hover:bg-indigo-700",
     },
     {
-      title: "Assigner un courrier",
-      icon: <FolderCog size={42} />,
-      to: "/assignation",
-      color: "bg-green-100 text-green-700 hover:bg-green-200",
-      darkColor: "bg-green-800 text-green-100 hover:bg-green-700",
-    },
-    {
       title: "Départ du courrier",
       icon: <Mail size={42} />,
-      to: "#",
-      color: "bg-pink-100 text-pink-700 hover:bg-pink-200",
-      darkColor: "bg-pink-800 text-pink-100 hover:bg-pink-700",
+      to: "/informationdepart",
+      color: "bg-green-100 text-green-700 hover:bg-green-200",
+      darkColor: "bg-green-800 text-green-100 hover:bg-green-700",
     },
     {
       title: "Mes dossiers",
       icon: <Folder size={42} />,
       to: "/dossiers-affectes",
-      color: "bg-orange-100 text-orange-700 hover:bg-orange-200",
-      darkColor: "bg-orange-800 text-orange-100 hover:bg-orange-700",
+      color: "bg-pink-100 text-pink-700 hover:bg-pink-200",
+      darkColor: "bg-pink-800 text-pink-100 hover:bg-pink-700",
     },
     {
       title: "Dossiers des divisions",
       icon: <Folder size={42} />,
       to: "/dossiers-divisions",
-      color: "bg-purple-100 text-purple-700 hover:bg-purple-200",
-      darkColor: "bg-purple-800 text-purple-100 hover:bg-purple-700",
+      color: "bg-orange-100 text-orange-700 hover:bg-orange-200",
+      darkColor: "bg-orange-800 text-orange-100 hover:bg-orange-700",
     },
     {
       title: "Statistiques",
       icon: <BarChart2 size={42} />,
       to: "/dashboard",
+      color: "bg-purple-100 text-purple-700 hover:bg-purple-200",
+      darkColor: "bg-purple-800 text-purple-100 hover:bg-purple-700",
+    },
+    {
+      title: "Profil",
+      icon: <UserCircle size={42} />,
+      to: "/profil",
       color: "bg-blue-100 text-blue-700 hover:bg-blue-200",
       darkColor: "bg-blue-800 text-blue-100 hover:bg-blue-700",
     },
@@ -112,7 +112,7 @@ const Dashboard = () => {
 
       {/* BOUTON MODE */}
       <button
-        onClick={toggleMode}
+        onClick={toggleDarkMode}
         className="fixed bottom-5 right-5 p-3 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-all duration-300"
         aria-label="toggle dark mode"
       >
@@ -122,4 +122,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Accueil;

@@ -1,5 +1,7 @@
+<<<<<<< HEAD
 import api from "../api";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Menu,
@@ -17,11 +19,12 @@ import {
   Search,
   Grid,
   CheckCircle2,
+  Home,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
 const Enregistrement = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
@@ -69,7 +72,7 @@ const Enregistrement = () => {
 
   return (
     <div
-      className={`flex flex-col min-h-screen transition-colors duration-300 ${
+      className={`fixed top-0 left-0 w-full z-40 flex flex-col min-h-screen transition-colors duration-300 ${
         darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-100 text-gray-900"
       }`}
     >
@@ -131,6 +134,18 @@ const Enregistrement = () => {
           <nav className="flex-1 px-3 py-4 text-sm space-y-4 overflow-y-auto">
             <div>
               <ul className="space-y-2">
+                <Link to="/accueil">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-200"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                  >
+                    <Home size={18} />{" "}
+                    {sidebarOpen && "Accueil"}
+                  </li>
+                </Link>
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
                     currentPage === "Arriver du courrier"
@@ -145,19 +160,7 @@ const Enregistrement = () => {
                   <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
                 </li>
 
-                <Link to="/assignation">
-                  <li
-                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
-                      darkMode
-                        ? "hover:bg-gray-700 text-gray-200"
-                        : "hover:bg-indigo-50 text-indigo-800"
-                    }`}
-                  >
-                    <FolderCog size={18} />{" "}
-                    {sidebarOpen && "Assigner un courrier"}
-                  </li>
-                </Link>
-
+                <Link to="/informationdepart">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
                     darkMode
@@ -167,6 +170,7 @@ const Enregistrement = () => {
                 >
                   <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
                 </li>
+                </Link>
 
                 <Link to="/dashboard">
                   <li
@@ -277,11 +281,11 @@ const Enregistrement = () => {
         </aside>
 
         {/* MAIN */}
-        <main className="flex-1 p-6 overflow-auto relative">
+        <main className="flex-1 p-6 overflow-y-auto h-[calc(100vh-64px)] relative">
           {/* BOUTON MODE CLAIR/SOMBRE */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
               aria-label="toggle dark mode"
             >
@@ -336,7 +340,7 @@ const Enregistrement = () => {
                   darkMode ? "text-white" : "text-indigo-800"
                 }`}
               >
-                Enregistrement
+                ENREGISTREMENT COURRIER
               </h2>
               <p className="text-sm text-gray-500 text-center mt-1">
                 Veuillez remplir les informations du courrier reçu.

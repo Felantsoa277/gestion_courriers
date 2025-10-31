@@ -1,139 +1,47 @@
-<<<<<<< HEAD
-import React, { useEffect, useState, useCallback } from "react";
-import api from "../api";
-import { Link, useNavigate, useParams } from "react-router-dom";
-=======
 import React, { useState, useContext } from "react";
 import { DarkModeContext } from "./DarkModeContext";
 import { Link, useNavigate } from "react-router-dom";
->>>>>>> b67204266e3d784fac0348e21b5cb1db1c264591
 import {
   Menu,
   Mail,
   Folder,
+  BarChart2,
   Sun,
   Moon,
+  Trash2,
+  Edit,
   FolderCog,
   UserCircle,
+  Info,
+  Save,
+  Search,
   Grid,
   CheckCircle2,
   Home,
+  FileText,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
-const ModificationEnregistrement = () => {
+const EnregistrementDepart = () => {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [success, setSuccess] = useState(false);
-  const [errors , setErrors] = useState();
   const navigate = useNavigate();
-  const [isSubmiting , setIsSubmting] = useState(false);
-  // Route uses :id in App.jsx — map it to NumeroArrive for compatibility with backend
-  const { id: NumeroArrive } = useParams();
 
-  const [modifier, setModifier] = useState({
-    DateArrive: "",
-    Provenance: "",
-    numero_correspondance_arrive: "",
-    DateCorrespondanceArrive: "",
-    TexteCorespondanceArrive: "",
-    piece_jointe_arrive: "",
-  });
-
-  const currentPage = "Arriver du courrier";
-
-  // 🔹 Gestion de la modification des champs
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setModifier((prev) => ({ ...prev, [name]: value }));
-  };
+  const currentPage = "Départ du courrier";
 
   // Soumission du formulaire
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmting(true);
-    try {
-      console.log(modifier);
-      // Send update to the backend (adjust endpoint/method if your API expects PUT)
-      const response = await api.post(`/modification_arrive/${NumeroArrive}`, modifier);
-      console.log(response);
-      setSuccess(true);
-      setTimeout(() => {
-        navigate("/information");
-      }, 2500);
-    } catch (error) {
-      if (error.response && error.response.status === 422) {
-        console.log(error);
-        setErrors(error.response.data.message);
-      } else {
-        setErrors('Il y a quelque chose qui cloche');
-      }
-    } finally {
-      setIsSubmting(false);
-    }
+    setSuccess(true);
+    setTimeout(() => {
+      navigate("/informationdepart");
+    }, 2500);
   };
-
-
-  const getArriveById = useCallback(async () => {
-    try {
-      const response = await api.get(`/modifier_arrive/${NumeroArrive}`);
-      const data = response.data;
-      // Robust formatter to produce yyyy-MM-dd for <input type="date">
-      const fmt = (v) => {
-        if (!v && v !== 0) return "";
-        // If already in YYYY-MM-DD form
-        if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
-        // Handle ISO strings with time and optional microseconds/timezone like 2025-10-26T00:00:00.000000Z
-        if (typeof v === 'string') {
-          const isoMatch = v.match(/^(\d{4}-\d{2}-\d{2})T/);
-          if (isoMatch) return isoMatch[1];
-          // Try Date parse fallback
-          const d = new Date(v);
-          if (!isNaN(d)) return d.toISOString().slice(0, 10);
-          return '';
-        }
-        // If it's a Date object
-        if (v instanceof Date) {
-          if (!isNaN(v)) return v.toISOString().slice(0, 10);
-          return '';
-        }
-        // As last resort, try to coerce to date
-        try {
-          const d = new Date(String(v));
-          if (!isNaN(d)) return d.toISOString().slice(0, 10);
-        } catch {
-          // noop
-        }
-        return '';
-      };
-
-      // Helpful debug info when developing
-      console.debug('modifier GET response data:', data);
-
-      setModifier({
-        DateArrive: fmt(data.DateArrive) || "",
-        Provenance: data.Provenance || "",
-        numero_correspondance_arrive: data.numero_correspondance_arrive || "",
-        DateCorrespondanceArrive: fmt(data.DateCorrespondanceArrive) || "",
-        TexteCorespondanceArrive: data.TexteCorespondanceArrive || "",
-        piece_jointe_arrive: data.piece_jointe_arrive || "",
-      });
-    } catch (error) {
-      console.error('Erreur getArriveById:', error);
-      setErrors('Impossible de récupérer les données du courrier.');
-    }
-  }, [NumeroArrive]);
-
-  // Trigger fetching after getArriveById is defined
-  useEffect(() => {
-    if (NumeroArrive) {
-      getArriveById();
-    }
-  }, [getArriveById, NumeroArrive]);
 
   return (
     <div
-      className={`fixed top-0 left-0 w-full z-40 flex flex-col min-h-screen transition-colors duration-300 relative ${
+      className={`fixed top-0 left-0 w-full z-40 flex flex-col min-h-screen transition-colors duration-300 ${
         darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-100 text-gray-900"
       }`}
     >
@@ -159,9 +67,9 @@ const ModificationEnregistrement = () => {
         </Link>
       </header>
 
-      {/* LAYOUT */}
-      <div className="flex flex-1 relative">
-{/* SIDEBAR */}
+      {/* LAYOUT: SIDEBAR + MAIN */}
+      <div className="flex flex-1">
+        {/* SIDEBAR */}
         <aside
           className={`${
             sidebarOpen ? "w-64" : "w-24"
@@ -207,9 +115,21 @@ const ModificationEnregistrement = () => {
                     {sidebarOpen && "Accueil"}
                   </li>
                 </Link>
+                <Link to="/information">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
-                    currentPage === "Arriver du courrier"
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-200"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                >
+                  <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
+                </li>
+                </Link>
+
+                <li
+                  className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
+                    currentPage === "Départ du courrier"
                       ? darkMode
                         ? "bg-indigo-900 text-indigo-200"
                         : "bg-indigo-100 text-indigo-800"
@@ -218,20 +138,8 @@ const ModificationEnregistrement = () => {
                       : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
-                  <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
-                </li>
-
-                <Link to="/informationdepart">
-                <li
-                  className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
-                    darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-indigo-800"
-                  }`}
-                >
                   <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
                 </li>
-                </Link>
 
                 <Link to="/dashboard">
                   <li
@@ -343,21 +251,47 @@ const ModificationEnregistrement = () => {
 
         {/* MAIN */}
         <main className="flex-1 p-6 overflow-y-auto h-[calc(100vh-64px)] relative">
-          {/* Bouton dark mode */}
+          {/* BOUTON MODE CLAIR/SOMBRE */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
               onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
+              aria-label="toggle dark mode"
             >
               {darkMode ? <Sun size={22} /> : <Moon size={22} />}
             </button>
           </div>
 
-          {/* FORMULAIRE */}
-          {errors &&
-            <div className="alert alert-danger">{errors}</div>}
-          <div
+          {/* TOP ACTIONS */}
+          <div className="flex flex-col lg:flex-row gap-4 items-start justify-between mb-6">
+            <div className="flex gap-3 flex-wrap">
+              <Link
+                to="/informationdepart"
+                className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
+                  darkMode
+                    ? "bg-gray-800 border-gray-700 text-gray-100"
+                    : "bg-white border-indigo-100 text-indigo-800"
+                } shadow-sm hover:shadow-md transition`}
+              >
+                <Info size={18} />
+                <span className="font-medium">Informations</span>
+              </Link>
 
+              <button
+                className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600 text-gray-100"
+                    : "bg-indigo-100 border-indigo-100 text-indigo-800"
+                } shadow-sm hover:shadow-md transition`}
+              >
+                <Save size={18} />
+                <span className="font-medium">Enregistrer un départ</span>
+              </button>
+            </div>
+          </div>
+
+          {/* GRAND CARD */}
+          <div
             className={`rounded-xl shadow-lg overflow-hidden ${
               darkMode ? "bg-gray-800" : "bg-white"
             }`}
@@ -375,26 +309,24 @@ const ModificationEnregistrement = () => {
                   darkMode ? "text-white" : "text-indigo-800"
                 }`}
               >
-                MODIFICATION ENREGISTREMENT
+                ENREGISTREMENT DES INFORMATIONS DE DEPART D'UN COURRIER
               </h2>
               <p className="text-sm text-gray-500 text-center mt-1">
-                Mettez à jour les informations du courrier sélectionné.
+                Veuillez remplir les informations de départ du courrier.
               </p>
             </div>
 
+            {/* FORMULAIRE */}
             <form
               onSubmit={handleSubmit}
               className="p-6 grid grid-cols-1 md:grid-cols-2 gap-10"
             >
               <div className="flex flex-col">
                 <label className="text-xl font-semibold mb-1">
-                  Date de réception
+                  Date de départ
                 </label>
                 <input
                   type="date"
-                  name="DateArrive"
-                  value={modifier.DateArrive}
-                  onChange={handleChange}
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -404,12 +336,9 @@ const ModificationEnregistrement = () => {
               </div>
 
               <div className="flex flex-col">
-                <label className="text-xl font-semibold mb-1">Provenance</label>
+                <label className="text-xl font-semibold mb-1">Destinataire</label>
                 <input
                   type="text"
-                  name="Provenance"
-                  value={modifier.Provenance}
-                  onChange={handleChange}
                   placeholder="Ex: Ministère de l'Économie"
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
@@ -424,10 +353,8 @@ const ModificationEnregistrement = () => {
                   Numéro de la correspondance
                 </label>
                 <input
-                  name="numero_correspondance_arrive"
-                  type="number"
-                  value={modifier.numero_correspondance_arrive}
-                  onChange={handleChange}
+                  type="text"
+                  placeholder="Ex: CORR-2025-001"
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -442,9 +369,6 @@ const ModificationEnregistrement = () => {
                 </label>
                 <input
                   type="date"
-                  name="DateCorrespondanceArrive"
-                  value={modifier.DateCorrespondanceArrive}
-                  onChange={handleChange}
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -457,9 +381,6 @@ const ModificationEnregistrement = () => {
                 <label className="text-xl font-semibold mb-1">Texte</label>
                 <input
                   type="text"
-                  name="TexteCorespondanceArrive"
-                  value={modifier.TexteCorespondanceArrive}
-                  onChange={handleChange}
                   placeholder="Objet du courrier"
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
@@ -471,14 +392,11 @@ const ModificationEnregistrement = () => {
 
               <div className="flex flex-col">
                 <label className="text-xl font-semibold mb-1">
-                  Nombre de pièces jointes
+                  Pièces jointes
                 </label>
                 <input
-                  type="number"
-                  name="piece_jointe_arrive"
-                  value={modifier.piece_jointe_arrive}
-                  onChange={handleChange}
-                  placeholder="Texte des pièces jointes"
+                  type="text"
+                  placeholder="texte des pièces jointes"
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -489,38 +407,29 @@ const ModificationEnregistrement = () => {
 
               {/* Boutons */}
               <div className="col-span-1 md:col-span-2 flex flex-col items-center mt-6 gap-3">
-                {isSubmiting ?
-                <button
-                  type="button"
-                  className="bg-indigo-600 text-white w-100 px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-medium"
-                >
-                  Modification...
-                </button> 
-                :
                 <button
                   type="submit"
                   className="bg-indigo-600 text-white w-100 px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-medium"
                 >
-                  Mettre à jour
-                </button>}
-                
-                <Link to="/information">
-                <button
-                  className="bg-gray-200 text-black w-100 px-6 py-2 rounded-lg hover:bg-gray-300 font-medium"
-                >
-                  Annuler
+                  Enregistrer
                 </button>
+                <Link to="/informationdepart">
+                  <button className="bg-gray-200 text-black w-100 px-6 py-2 rounded-lg hover:bg-gray-300 font-medium">
+                    Annuler
+                  </button>
                 </Link>
               </div>
             </form>
           </div>
 
-          {/* Message de succès superposé */}
+          {/* MESSAGE DE SUCCÈS */}
           {success && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30">
               <div
                 className={`p-10 rounded-2xl shadow-xl text-center ${
-                  darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900"
+                  darkMode
+                    ? "bg-gray-800 text-gray-100"
+                    : "bg-white text-gray-900"
                 }`}
               >
                 <CheckCircle2
@@ -528,13 +437,13 @@ const ModificationEnregistrement = () => {
                   className="text-green-500 mx-auto mb-4 animate-bounce"
                 />
                 <h2 className="text-2xl font-bold mb-2">
-                  Modification enregistrée avec succès !
+                  Enregistré avec succès !
                 </h2>
                 <p className="text-gray-500 mb-6">
                   Vous serez redirigé vers la page d’informations.
                 </p>
                 <Link
-                  to="/information"
+                  to="/informationdepart"
                   className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
                 >
                   Retourner maintenant
@@ -548,4 +457,4 @@ const ModificationEnregistrement = () => {
   );
 };
 
-export default ModificationEnregistrement;
+export default EnregistrementDepart;

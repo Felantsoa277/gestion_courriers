@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import {Link} from "react-router-dom";
 import {
   Menu,
@@ -19,7 +20,7 @@ import {
 import logo from "../assets/mef.png";
 
 const ListeDossiersDivisions = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [query, setQuery] = useState("");
 
@@ -87,14 +88,25 @@ const ListeDossiersDivisions = () => {
         <aside
           className={`${
             sidebarOpen ? "w-64" : "w-24"
-          } bg-white border-r border-gray-200 text-gray-800 flex flex-col transition-all duration-300`}
+          } fixed h-full flex flex-col transition-all duration-300 pt-30 border-r ${
+            darkMode
+              ? "bg-gray-800 border-gray-700 text-gray-100"
+              : "bg-white border-gray-200 text-gray-800"
+          }`}
         >
-          <div className="flex items-center justify-between px-4 py-3 border-b">
+          <div
+            className={`flex items-center justify-between px-4 py-3 border-b ${
+              darkMode ? "border-gray-700" : "border-gray-200"
+            }`}
+          >
             {sidebarOpen && <h2 className="font-semibold text-lg">Menu</h2>}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="text-indigo-700 hover:text-indigo-900"
-              aria-label="toggle sidebar"
+              className={`${
+                darkMode
+                  ? "text-indigo-300 hover:text-indigo-400"
+                  : "text-indigo-700 hover:text-indigo-900"
+              }`}
             >
               <Menu size={22} />
             </button>
@@ -103,20 +115,48 @@ const ListeDossiersDivisions = () => {
           <nav className="flex-1 px-3 py-4 text-sm space-y-4 overflow-y-auto">
             <div>
               <ul className="space-y-2">
-                <li
-                  className="p-2 rounded-md cursor-pointer flex items-center gap-3 text-indigo-800 font-medium">
-                  <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
-                </li>
-                <Link to="/assignation">
-                  <li className="hover:bg-indigo-50 p-2 rounded-md cursor-pointer flex items-center gap-3 text-indigo-800 font-medium">
-                    <FolderCog size={18} /> {sidebarOpen && "Assigner un courrier"}
+                <Link to="/accueil">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                  >
+                    <Home size={18} />{" "}
+                    {sidebarOpen && "Accueil"}
                   </li>
                 </Link>
-                <li className="hover:bg-indigo-50 p-2 rounded-md cursor-pointer flex items-center gap-3 text-indigo-800 font-medium">
-                  <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
-                </li>
+                <Link to="/information">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                  >
+                    <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
+                  </li>
+                </Link>
+                <Link to="/informationdepart">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                  >
+                    <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
+                  </li>
+                </Link>
                 <Link to="/dashboard">
-                  <li className="hover:bg-indigo-50 p-2 rounded-md cursor-pointer flex items-center gap-3 text-indigo-800 font-medium">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                  >
                     <Grid size={18} /> {sidebarOpen && "Dashboard"}
                   </li>
                 </Link>
@@ -124,37 +164,88 @@ const ListeDossiersDivisions = () => {
             </div>
 
             <div>
-              <p className="font-semibold mt-3 text-indigo-800">Mes dossiers</p>
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
+                Mes dossiers
+              </p>
               <ul className="space-y-2 mt-1">
                 <Link to="/dossiers-affectes">
-                  <li className="hover:bg-indigo-50 p-2 rounded-md cursor-pointer flex items-center gap-2">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-2 ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50"
+                    }`}
+                  >
                     <Folder size={18} /> {sidebarOpen && "Dossiers affectés"}
                   </li>
                 </Link>
-                <li className="hover:bg-indigo-50 p-2 rounded-md cursor-pointer flex items-center gap-2">
-                  <Folder size={18} /> {sidebarOpen && "Dossiers suivis"}
-                </li>
+                <Link to="/dossiers-suivis">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-2 ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50"
+                    }`}
+                  >
+                    <Folder size={18} /> {sidebarOpen && "Dossiers suivis"}
+                  </li>
+                </Link>
               </ul>
             </div>
 
             <div>
-              <p className="font-semibold mt-3 text-indigo-800">
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
                 Dossiers des divisions
               </p>
               <ul className="space-y-2 mt-1">
-                <li className={`hover:bg-indigo-50 p-2 rounded-md cursor-pointer flex items-center gap-2 ${
-                    currentPage === "Dossiers des divisions"
-                      ? "bg-indigo-100"
-                      : "hover:bg-indigo-50"
-                  }`}>
-                  <Folder size={18} /> {sidebarOpen && "Dossiers des divisions"}
-                </li>
-                <li className="hover:bg-indigo-50 p-2 rounded-md cursor-pointer flex items-center gap-2">
-                  <Folder size={18} /> {sidebarOpen && "Dossiers sans affectataires"}
-                </li>
-                <li className="hover:bg-indigo-50 p-2 rounded-md cursor-pointer flex items-center gap-2">
-                  <Folder size={18} /> {sidebarOpen && "Dossiers archivés/classés"}
-                </li>
+                <Link to="/dossiers-divisions">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-2 ${
+                      currentPage === "Dossier des divisions"
+                        ? darkMode
+                          ? "bg-indigo-900 text-indigo-200"
+                        : "bg-indigo-100 text-indigo-800"
+                        : darkMode
+                        ? "hover:bg-gray-700 text-gray-200"
+                      : "hover:bg-indigo-50 text-gray-800"
+                    }`}
+                  >
+                    <Folder size={18} />{" "}
+                    {sidebarOpen && "Dossiers des divisions"}
+                  </li>
+                </Link>
+                <Link to="/dossiers-sans-affectataires">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-2 ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50"
+                    }`}
+                  >
+                    <Folder size={18} />{" "}
+                    {sidebarOpen && "Dossiers sans affectataires"}
+                  </li>
+                </Link>
+                <Link to="dossiers-classes">
+                  <li
+                    className={`p-2 rounded-md cursor-pointer flex items-center gap-2 ${
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
+                        : "hover:bg-indigo-50"
+                    }`}
+                  >
+                    <Folder size={18} />{" "}
+                    {sidebarOpen && "Dossiers archivés/classés"}
+                  </li>
+                </Link>
               </ul>
             </div>
           </nav>
@@ -165,7 +256,7 @@ const ListeDossiersDivisions = () => {
           {/* Bouton mode clair/sombre */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
               aria-label="toggle dark mode"
             >
@@ -276,17 +367,9 @@ const ListeDossiersDivisions = () => {
                             {item.etat}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-center">
-                          <div className="flex items-center justify-center gap-3">
-                            <Link to={`/modification/${item.id}`}>
-                              <button className="text-green-600 hover:text-green-800" aria-label="modifier">
-                                <Edit size={18} />
-                              </button>
-                            </Link>
-                            <button className="text-red-600 hover:text-red-800" aria-label="supprimer">
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
+                        <td className="px-4 py-3 text-center flex justify-center gap-2">
+                          <button className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"><Edit size={16} /></button>
+                          <button className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={16} /></button>
                         </td>
                       </tr>
                     ))

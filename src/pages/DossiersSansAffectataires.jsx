@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { DarkModeContext } from "./DarkModeContext";
 import { Link } from "react-router-dom";
 import {
   Menu,
@@ -17,13 +18,22 @@ import {
   Grid,
   Pencil,
   File,
+  Home,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
 const DossiersSansAffectataires = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [query, setQuery] = useState("");
+
+  // États pour les filtres
+  const [filterProvenance, setFilterProvenance] = useState("");
+  const [filterDateArrivee, setFilterDateArrivee] = useState("");
+  const [filterNumeroCorr, setFilterNumeroCorr] = useState("");
+  const [filterTexte, setFilterTexte] = useState("");
+
+  //État pour la ligne sélectionnée
+  const [selectedId, setSelectedId] = useState(null);
 
   const currentPage = "Dossier sans affectataires";
 
@@ -54,13 +64,17 @@ const DossiersSansAffectataires = () => {
     },
   ];
 
+  // Fonction de filtrage
   const filtered = enregistrements.filter((e) => {
-    const q = query.trim().toLowerCase();
-    if (!q) return true;
     return (
-      e.numero.toLowerCase().includes(q) ||
-      e.provenance.toLowerCase().includes(q) ||
-      e.texte.toLowerCase().includes(q)
+      (!filterProvenance ||
+        e.provenance.toLowerCase().includes(filterProvenance.toLowerCase())) &&
+      (!filterDateArrivee || e.dateArrivee === filterDateArrivee) &&
+      (!filterNumeroCorr ||
+        e.numeroCorrespondance
+          .toLowerCase()
+          .includes(filterNumeroCorr.toLowerCase())) &&
+      (!filterTexte || e.texte.toLowerCase().includes(filterTexte.toLowerCase()))
     );
   });
 
@@ -121,8 +135,19 @@ const DossiersSansAffectataires = () => {
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
                     darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
+                  }`}
+                >
+                  <Link to="/accueil" className="flex items-center gap-2 w-full">
+                    <Home size={18} /> {sidebarOpen && "Accueil"}
+                  </Link>
+                </li>
+                <li
+                  className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
+                    darkMode
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
                   <Link to="/information" className="flex items-center gap-2 w-full">
@@ -130,35 +155,25 @@ const DossiersSansAffectataires = () => {
                   </Link>
                 </li>
 
+                <Link to="/informationdepart">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
                     darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
-                  }`}
-                >
-                  <Link to="/assignation" className="flex items-center gap-2 w-full">
-                    <FolderCog size={18} /> {sidebarOpen && "Assigner un courrier"}
-                  </Link>
-                </li>
-
-                <li
-                  className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
-                    darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
                   <Link to="#" className="flex items-center gap-2 w-full">
                     <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
                   </Link>
                 </li>
+                </Link>
 
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
                     darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
+                      ? "hover:bg-gray-700 text-gray-100"
+                      : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
                   <Link to="/dashboard" className="flex items-center gap-2 w-full">
@@ -169,7 +184,13 @@ const DossiersSansAffectataires = () => {
             </div>
 
             <div>
-              <p className="font-semibold mt-3 text-indigo-500">Mes dossiers</p>
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
+                Mes dossiers
+              </p>
               <ul className="space-y-2 mt-1">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-2 font-medium transition duration-200 ease-in-out ${
@@ -198,7 +219,11 @@ const DossiersSansAffectataires = () => {
             </div>
 
             <div>
-              <p className="font-semibold mt-3 text-indigo-500">
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
                 Dossiers des divisions
               </p>
               <ul className="space-y-2 mt-1">
@@ -218,8 +243,8 @@ const DossiersSansAffectataires = () => {
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-2 font-medium transition duration-200 ease-in-out ${
                     currentPage === "Dossier sans affectataires"
                       ? darkMode
-                        ? "bg-gray-700 text-white"
-                        : "bg-indigo-100 text-gray-800"
+                        ? "bg-indigo-900 text-indigo-200"
+                        : "bg-indigo-100 text-indigo-800"
                       : darkMode
                       ? "hover:bg-gray-700 text-gray-200"
                       : "hover:bg-indigo-50 text-gray-800"
@@ -251,7 +276,7 @@ const DossiersSansAffectataires = () => {
           {/* Bouton mode clair/sombre */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
             >
               {darkMode ? <Sun size={22} /> : <Moon size={22} />}
@@ -273,36 +298,68 @@ const DossiersSansAffectataires = () => {
                 <span className="font-medium">Informations</span>
               </Link>
 
+              {/*Bouton Assigner activé seulement si une ligne est sélectionnée */}
               <Link
-                to="/assignation"
+                to={selectedId ? "/assignation" : "#"}
                 className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
-                  darkMode
-                    ? "bg-gray-700 border-gray-600 text-gray-100"
-                    : "bg-white border-indigo-100 text-indigo-800"
+                  selectedId
+                    ? darkMode
+                      ? "bg-gray-700 border-gray-600 text-gray-100"
+                      : "bg-white border-indigo-100 text-indigo-800"
+                    : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
                 } shadow-sm hover:shadow-md transition`}
+                onClick={(e) => {
+                  if (!selectedId) e.preventDefault();
+                }}
               >
                 <File size={18} />
                 <span className="font-medium">Assigner</span>
               </Link>
             </div>
+          </div>
 
-            <div className="w-full lg:w-1/3">
-              <div
-                className={`flex items-center border rounded-lg px-3 py-2 ${
-                  darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+          {/* Filtrage multi-critères */}
+          <div className="flex flex-col lg:flex-row gap-3 items-end mb-6">
+            <div className="flex gap-2 flex-wrap w-full lg:w-3/4">
+              <input
+                type="text"
+                value={filterProvenance}
+                onChange={(e) => setFilterProvenance(e.target.value)}
+                placeholder="Provenance"
+                className={`flex-1 px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
                 }`}
-              >
-                <Search size={18} className="text-gray-400" />
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Rechercher un courrier, provenance..."
-                  className={`ml-2 w-full bg-transparent outline-none text-sm ${
-                    darkMode ? "text-gray-100" : "text-gray-700"
-                  }`}
-                />
-              </div>
+              />
+              <input
+                type="date"
+                value={filterDateArrivee}
+                onChange={(e) => setFilterDateArrivee(e.target.value)}
+                className={`px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
+              <input
+                type="text"
+                value={filterNumeroCorr}
+                onChange={(e) => setFilterNumeroCorr(e.target.value)}
+                placeholder="N° Correspondance"
+                className={`px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
+              <input
+                type="text"
+                value={filterTexte}
+                onChange={(e) => setFilterTexte(e.target.value)}
+                placeholder="Objet"
+                className={`px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
             </div>
+            <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition">
+              Filtrer
+            </button>
           </div>
 
           {/* GRAND CARD */}
@@ -324,10 +381,10 @@ const DossiersSansAffectataires = () => {
                   darkMode ? "text-white" : "text-indigo-800"
                 }`}
               >
-                Listes des enregistrements
+                Listes des courriers sans affectataires
               </h2>
               <p className="text-sm text-gray-500 mt-1">
-                Séléctionner un enregistrement puis appuyer sur le bouton "Assigner" pour l'affecter vers une division.
+                Sélectionnez un enregistrement puis appuyez sur le bouton <strong>"Assigner"</strong> pour l'affecter à une division.
               </p>
             </div>
 
@@ -339,15 +396,15 @@ const DossiersSansAffectataires = () => {
                       darkMode ? "bg-indigo-950 text-white" : "bg-indigo-100 text-indigo-900"
                     }`}
                   >
-                    <th className="px-4 py-3 text-left text-sm">N° d'enregistrement</th>
-                    <th className="px-4 py-3 text-left text-sm">Date de l'arrivée</th>
-                    <th className="px-4 py-3 text-left text-sm">Provenance</th>
-                    <th className="px-4 py-3 text-left text-sm">N° de la correspondance</th>
-                    <th className="px-4 py-3 text-left text-sm">Date de la correspondance</th>
-                    <th className="px-4 py-3 text-left text-sm">Texte</th>
-                    <th className="px-4 py-3 text-left text-sm">Observation</th>
-                    <th className="px-4 py-3 text-left text-sm">Bureaux destinataires</th>
-                    <th className="px-4 py-3 text-left text-sm w-36">État</th>
+                    <th className="px-4 py-3 text-center text-sm">N° d'enregistrement</th>
+                    <th className="px-4 py-3 text-center text-sm">Date de l'arrivée</th>
+                    <th className="px-4 py-3 text-center text-sm">Provenance</th>
+                    <th className="px-4 py-3 text-center text-sm">N° de la correspondance</th>
+                    <th className="px-4 py-3 text-center text-sm">Date de la correspondance</th>
+                    <th className="px-4 py-3 text-center text-sm">Texte</th>
+                    <th className="px-4 py-3 text-center text-sm">Observation</th>
+                    <th className="px-4 py-3 text-center text-sm">Bureaux destinataires</th>
+                    <th className="px-4 py-3 text-center text-sm w-36">État</th>
                     <th className="px-4 py-3 text-center text-sm">Actions</th>
                   </tr>
                 </thead>
@@ -363,21 +420,28 @@ const DossiersSansAffectataires = () => {
                     filtered.map((item) => (
                       <tr
                         key={item.id}
-                        className={`border-b ${
-                          darkMode ? "border-gray-700 hover:bg-gray-700" : "hover:bg-indigo-50"
+                        onClick={() => setSelectedId(selectedId === item.id ? null : item.id)}
+                        className={`cursor-pointer border-b ${
+                          selectedId === item.id
+                            ? darkMode
+                              ? "bg-indigo-900 text-white"
+                              : "bg-indigo-200 text-indigo-900"
+                            : darkMode
+                            ? "border-gray-700 hover:bg-gray-700"
+                            : "hover:bg-indigo-50"
                         }`}
                       >
-                        <td className="px-4 py-3 text-sm">{item.numero}</td>
-                        <td className="px-4 py-3 text-sm">{item.dateArrivee}</td>
-                        <td className="px-4 py-3 text-sm">{item.provenance}</td>
-                        <td className="px-4 py-3 text-sm">{item.numeroCorrespondance}</td>
-                        <td className="px-4 py-3 text-sm">{item.dateCorrespondance}</td>
-                        <td className="px-4 py-3 text-sm">{item.texte}</td>
-                        <td className="px-4 py-3 text-sm">{item.observation}</td>
-                        <td className="px-4 py-3 text-sm">{item.bureau}</td>
-                        <td className="px-4 py-3 text-sm">
+                        <td className="px-2 py-3 text-center text-sm">{item.numero}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.dateArrivee}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.provenance}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.numeroCorrespondance}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.dateCorrespondance}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.texte}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.observation}</td>
+                        <td className="px-2 py-3 text-center text-sm">{item.bureau}</td>
+                        <td className="px-2 py-3 text-center text-sm">
                           <span
-                            className={`px-2 py-1 rounded-full text-sm ${
+                            className={`px-2 py-1 text-center rounded-full text-sm ${
                               item.etat === "Traitée"
                                 ? "bg-green-200 text-green-800"
                                 : "bg-yellow-200 text-yellow-800"
@@ -386,17 +450,9 @@ const DossiersSansAffectataires = () => {
                             {item.etat}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-center">
-                          <div className="flex items-center justify-center gap-3">
-                            <Link to={`/modification/${item.id}`}>
-                              <button className="text-green-600 hover:text-green-800" aria-label="modifier">
-                                <Edit size={18} />
-                              </button>
-                            </Link>
-                            <button className="text-red-600 hover:text-red-800" aria-label="supprimer">
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
+                        <td className="px-4 py-3 text-center flex justify-center gap-2">
+                          <button className="px-2 py-1 mt-3 bg-blue-600 text-white rounded hover:bg-blue-700"><Edit size={18} /></button>
+                          <button className="px-2 py-1 mt-3 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={18} /></button>
                         </td>
                       </tr>
                     ))
