@@ -19,6 +19,7 @@ import {
   Grid,
   Home,
   FileText,
+  HelpCircle,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
@@ -39,6 +40,10 @@ const DepartCourrier = () => {
     };
 
   const currentPage = "Départ du courrier";
+
+  //Modal suppression
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   // États pour les filtres
   const [filterProvenance, setFilterProvenance] = useState("");
@@ -88,6 +93,19 @@ const DepartCourrier = () => {
   // Fonction pour sélectionner/désélectionner
   const handleRowClick = (id) => {
     setSelectedId(selectedId === id ? null : id);
+  };
+
+  // Supprimer l'enregistrement
+  const handleDelete = (item) => {
+  setSelectedItem(item);
+  setConfirmDelete(true);
+  };
+
+  const confirmDeletion = () => {
+  console.log("Supprimer:", selectedItem);
+  setConfirmDelete(false);
+  setSelectedItem(null);
+  //appeler API ou modifier state pour réellement supprimer l'élément
   };
 
   return (
@@ -505,7 +523,7 @@ const DepartCourrier = () => {
                         </td>
                         <td className="px-4 py-3 text-center flex justify-center gap-2">
                           <button className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"><Edit size={16} /></button>
-                          <button className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={16} /></button>
+                          <button onClick={() => handleDelete(item)} className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={16} /></button>
                         </td>
                       </tr>
                     ))
@@ -514,6 +532,30 @@ const DepartCourrier = () => {
               </table>
             </div>
           </div>
+
+          {/* MODAL CONFIRMATION SUPPRESSION */} 
+          {confirmDelete && selectedItem && ( 
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30"> 
+              <div className={`p-10 rounded-2xl shadow-xl text-center ${ 
+                darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900" 
+                }`} 
+              > 
+                <HelpCircle size={80} className="text-red-500 mx-auto mb-4 animate-bounce" /> 
+                  <h2 className="text-2xl font-bold mb-2"> Supprimer cet enregistrement ? </h2> 
+                  <p className="text-gray-500 mb-6"> Êtes-vous sûr de vouloir supprimer "{selectedItem.numero}" ? 
+                    Cette action est irréversible. 
+                  </p> 
+                  <div className="flex justify-center gap-4"> 
+                    <button onClick={confirmDeletion} className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition" > 
+                      Oui 
+                    </button> 
+                    <button onClick={() => setConfirmDelete(false)} className="bg-gray-200 text-black px-6 py-2 rounded-lg hover:bg-gray-300 transition" > 
+                      Non 
+                    </button> 
+                  </div> 
+              </div> 
+            </div> 
+          )}
         </main>
       </div>
     </div>

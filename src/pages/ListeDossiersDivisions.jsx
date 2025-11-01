@@ -16,15 +16,23 @@ import {
   Save,
   Search,
   Grid,
+  Home,
+  HelpCircle,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
 const ListeDossiersDivisions = () => {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [query, setQuery] = useState("");
+
+  // États pour les filtres
+    const [filterProvenance, setFilterProvenance] = useState("");
+    const [filterDateArrivee, setFilterDateArrivee] = useState("");
+    const [filterNumeroCorr, setFilterNumeroCorr] = useState("");
+    const [filterTexte, setFilterTexte] = useState("");
 
   const currentPage = "Dossiers des divisions";
+
   const enregistrements = [
     {
       id: 1,
@@ -49,13 +57,17 @@ const ListeDossiersDivisions = () => {
     // ... autres enregistrements
   ];
 
+  // Fonction de filtrage
   const filtered = enregistrements.filter((e) => {
-    const q = query.trim().toLowerCase();
-    if (!q) return true;
     return (
-      e.numero.toLowerCase().includes(q) ||
-      e.provenance.toLowerCase().includes(q) ||
-      e.texte.toLowerCase().includes(q)
+      (!filterProvenance ||
+        e.provenance.toLowerCase().includes(filterProvenance.toLowerCase())) &&
+      (!filterDateArrivee || e.dateArrivee === filterDateArrivee) &&
+      (!filterNumeroCorr ||
+        e.numeroCorrespondance
+          .toLowerCase()
+          .includes(filterNumeroCorr.toLowerCase())) &&
+      (!filterTexte || e.texte.toLowerCase().includes(filterTexte.toLowerCase()))
     );
   });
 
@@ -88,7 +100,7 @@ const ListeDossiersDivisions = () => {
         <aside
           className={`${
             sidebarOpen ? "w-64" : "w-24"
-          } fixed h-full flex flex-col transition-all duration-300 pt-30 border-r ${
+          } fixed h-full flex flex-col transition-all duration-300 pt-5 border-r ${
             darkMode
               ? "bg-gray-800 border-gray-700 text-gray-100"
               : "bg-white border-gray-200 text-gray-800"
@@ -211,11 +223,11 @@ const ListeDossiersDivisions = () => {
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-2 ${
                       currentPage === "Dossier des divisions"
                         ? darkMode
-                          ? "bg-indigo-900 text-indigo-200"
+                        ? "bg-indigo-900 text-indigo-200"
                         : "bg-indigo-100 text-indigo-800"
-                        : darkMode
-                        ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-gray-800"
+                      : darkMode
+                      ? "hover:bg-gray-700 text-gray-200"
+                      : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
                     <Folder size={18} />{" "}
@@ -252,7 +264,9 @@ const ListeDossiersDivisions = () => {
         </aside>
 
         {/* MAIN */}
-        <main className="flex-1 p-6 overflow-auto relative">
+        <main className={`flex-1 p-6 overflow-auto relative transition-all duration-300 ${
+          sidebarOpen ? "ml-64" : "ml-24"
+        }`}>
           {/* Bouton mode clair/sombre */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
@@ -264,41 +278,80 @@ const ListeDossiersDivisions = () => {
             </button>
           </div>
 
-          {/* TOP ACTIONS: 3 cards + search */}
-          <div className="flex flex-col lg:flex-row gap-4 items-start justify-between mb-6">
+          {/* TOP ACTIONS */}
+          <div className="flex flex-col lg:flex-row gap-4 items-start justify-between mb-4">
             {/* 3 cards */}
+          <div className="flex flex-col lg:flex-row gap-4 items-start justify-between mb-4">
             <div className="flex gap-3 flex-wrap">
-              <Link to="/information"
+              <Link
+                to="/liste-dossiers-divisions"
                 className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
                   darkMode
                     ? "bg-gray-700 border-gray-600 text-gray-100"
-                    : "bg-indigo-100 border-indigo-100 text-indigo-800" // actif
+                    : "bg-indigo-100 border-indigo-100 text-indigo-800"
                 } shadow-sm hover:shadow-md transition`}
               >
                 <Info size={18} />
                 <span className="font-medium">Informations</span>
               </Link>
-            </div>
 
-            {/* recherche */}
-            <div className="w-full lg:w-1/3">
-              <label className="sr-only">Rechercher</label>
-              <div
-                className={`flex items-center border rounded-lg px-3 py-2 ${
-                  darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
-                }`}
+              <Link
+                to="/dossiers-divisions"
+                className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
+                  darkMode
+                    ? "bg-gray-800 border-gray-700 text-gray-100"
+                    : "bg-white border-indigo-100 text-indigo-800"
+                } shadow-sm hover:shadow-md transition`}
               >
-                <Search size={18} className="text-gray-400" />
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Rechercher un courrier, provenance..."
-                  className={`ml-2 w-full bg-transparent outline-none text-sm ${
-                    darkMode ? "text-gray-100" : "text-gray-700"
-                  }`}
-                />
-              </div>
+                <Save size={18} />
+                <span className="font-medium">Autres divisions</span>
+              </Link>
             </div>
+          </div>
+          </div>
+
+          {/* Filtrage multi-critères */}
+          <div className="flex flex-col lg:flex-row gap-3 items-end mb-6">
+            <div className="flex gap-2 flex-wrap w-full lg:w-3/4">
+              <input
+                type="text"
+                value={filterProvenance}
+                onChange={(e) => setFilterProvenance(e.target.value)}
+                placeholder="Provenance"
+                className={`flex-1 px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
+              <input
+                type="date"
+                value={filterDateArrivee}
+                onChange={(e) => setFilterDateArrivee(e.target.value)}
+                className={`px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
+              <input
+                type="text"
+                value={filterNumeroCorr}
+                onChange={(e) => setFilterNumeroCorr(e.target.value)}
+                placeholder="N° Correspondance"
+                className={`px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
+              <input
+                type="text"
+                value={filterTexte}
+                onChange={(e) => setFilterTexte(e.target.value)}
+                placeholder="Objet"
+                className={`px-3 py-2 border rounded-lg ${
+                  darkMode ? "bg-gray-800 border-gray-700 text-gray-100" : "bg-white border-gray-200 text-gray-900"
+                }`}
+              />
+            </div>
+            <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition">
+              Filtrer
+            </button>
           </div>
 
           {/* GRAND CARD */}
@@ -312,7 +365,7 @@ const ListeDossiersDivisions = () => {
                 Listes des enregistrements de la (Nom de la division)
               </h2>
               <p className="text-sm text-gray-500 mt-1">
-                Visualisez et gérez les courriers enregistrés. ({filtered.length})
+                Visualisez les courriers enregistrés de la division. ({filtered.length})
               </p>
             </div>
 
@@ -331,7 +384,6 @@ const ListeDossiersDivisions = () => {
                     <th className="px-4 py-3 text-left text-sm">Date de la correspondance</th>
                     <th className="px-4 py-3 text-left text-sm">Texte</th>
                     <th className="px-4 py-3 text-left text-sm w-36">État</th>
-                    <th className="px-4 py-3 text-center text-sm">Actions</th>
                   </tr>
                 </thead>
 
@@ -366,10 +418,6 @@ const ListeDossiersDivisions = () => {
                           >
                             {item.etat}
                           </span>
-                        </td>
-                        <td className="px-4 py-3 text-center flex justify-center gap-2">
-                          <button className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"><Edit size={16} /></button>
-                          <button className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={16} /></button>
                         </td>
                       </tr>
                     ))

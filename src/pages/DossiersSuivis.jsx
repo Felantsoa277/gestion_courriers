@@ -13,6 +13,7 @@ import {
   Pencil,
   Info,
   Home,
+  HelpCircle,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
@@ -26,8 +27,12 @@ const DossiersSuivis = () => {
   const [filterNumeroCorr, setFilterNumeroCorr] = useState("");
   const [filterTexte, setFilterTexte] = useState("");
 
-  // 🔹 État pour la ligne sélectionnée
+  // État pour la ligne sélectionnée
   const [selectedId, setSelectedId] = useState(null);
+
+  // Modal suppression
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const currentPage = "Dossier suivis";
 
@@ -77,6 +82,19 @@ const DossiersSuivis = () => {
     setSelectedId(selectedId === id ? null : id);
   };
 
+  // Supprimer l'enregistrement
+  const handleDelete = (item) => {
+  setSelectedItem(item);
+  setConfirmDelete(true);
+  };
+
+  const confirmDeletion = () => {
+  console.log("Supprimer:", selectedItem);
+  setConfirmDelete(false);
+  setSelectedItem(null);
+  //appeler API ou modifier state pour réellement supprimer l'élément
+  };
+
   return (
     <div
       className={`flex flex-col min-h-screen transition-colors duration-300 ${
@@ -108,11 +126,11 @@ const DossiersSuivis = () => {
       <div className="flex flex-1">
         {/* SIDEBAR */}
         <aside
-          className={`fixed h-full flex flex-col transition-all duration-300 pt-30 border-r ${
+          className={`fixed h-full flex flex-col transition-all duration-300 pt-30 ${
             sidebarOpen ? "w-64" : "w-24"
           } ${
             darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900"
-          } border-r border-gray-300`}
+          } border-gray-100`}
         >
           <div className="flex items-center justify-between px-4 py-3 border-b">
             {sidebarOpen && <h2 className="font-semibold text-lg">Menu</h2>}
@@ -404,7 +422,7 @@ const DossiersSuivis = () => {
                           </span>
                         </td>
                         <td className="px-4 py-3 text-center flex justify-center gap-2">
-                          <button className="px-2 py-1 mt-3 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={20} /></button>
+                          <button onClick={() => handleDelete(item)} className="px-2 py-1 mt-3 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={20} /></button>
                         </td>
                       </tr>
                     ))
@@ -413,6 +431,30 @@ const DossiersSuivis = () => {
               </table>
             </div>
           </div>
+
+          {/* MODAL CONFIRMATION SUPPRESSION */} 
+          {confirmDelete && selectedItem && ( 
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30"> 
+              <div className={`p-10 rounded-2xl shadow-xl text-center ${ 
+                darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900" 
+                }`} 
+              > 
+                <HelpCircle size={80} className="text-red-500 mx-auto mb-4 animate-bounce" /> 
+                  <h2 className="text-2xl font-bold mb-2"> Supprimer cet enregistrement ? </h2> 
+                  <p className="text-gray-500 mb-6"> Êtes-vous sûr de vouloir supprimer "{selectedItem.numero}" ? 
+                    Cette action est irréversible. 
+                  </p> 
+                  <div className="flex justify-center gap-4"> 
+                    <button onClick={confirmDeletion} className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition" > 
+                      Oui 
+                    </button> 
+                    <button onClick={() => setConfirmDelete(false)} className="bg-gray-200 text-black px-6 py-2 rounded-lg hover:bg-gray-300 transition" > 
+                      Non 
+                    </button> 
+                  </div> 
+              </div> 
+            </div> 
+          )}
         </main>
       </div>
     </div>

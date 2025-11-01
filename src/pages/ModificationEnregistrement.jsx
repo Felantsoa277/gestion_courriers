@@ -12,6 +12,7 @@ import {
   Grid,
   CheckCircle2,
   Home,
+  HelpCircle,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
@@ -19,6 +20,7 @@ const ModificationEnregistrement = () => {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [success, setSuccess] = useState(false);
+  const [confirmCancel, setConfirmCancel] = useState(false); // afficher modal annuler
   const navigate = useNavigate();
 
   const [courrier, setCourrier] = useState({
@@ -32,7 +34,7 @@ const ModificationEnregistrement = () => {
 
   const currentPage = "Arriver du courrier";
 
-  // 🔹 Gestion de la modification des champs
+  // Gestion de la modification des champs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCourrier((prev) => ({ ...prev, [name]: value }));
@@ -409,13 +411,12 @@ const ModificationEnregistrement = () => {
                 >
                   Mettre à jour
                 </button>
-                <Link to="/information">
                 <button
                   className="bg-gray-200 text-black w-100 px-6 py-2 rounded-lg hover:bg-gray-300 font-medium"
+                  type="button" onClick={() => setConfirmCancel(true)}
                 >
                   Annuler
                 </button>
-                </Link>
               </div>
             </form>
           </div>
@@ -446,6 +447,28 @@ const ModificationEnregistrement = () => {
                 </Link>
               </div>
             </div>
+          )}
+
+          {/* MODAL CONFIRMATION ANNULER */} 
+          {confirmCancel && ( 
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30"> 
+              <div className={`p-10 rounded-2xl shadow-xl text-center ${ 
+                darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900" }`} >
+                  <HelpCircle size={80} className="text-yellow-500 mx-auto mb-4 animate-bounce" /> 
+                    <h2 className="text-2xl font-bold mb-2"> Voulez-vous vraiment annuler ? </h2> 
+                    <p className="text-gray-500 mb-6"> Toutes les informations non enregistrées seront perdues. </p> 
+                    <div className="flex justify-center gap-4"> 
+                      <button onClick={() => navigate("/information")} 
+                      className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition" > 
+                        Oui 
+                      </button> 
+                      <button onClick={() => setConfirmCancel(false)} 
+                      className="bg-gray-200 text-black px-6 py-2 rounded-lg hover:bg-gray-300 transition" > 
+                        Non 
+                      </button> 
+                    </div> 
+              </div> 
+            </div> 
           )}
         </main>
       </div>

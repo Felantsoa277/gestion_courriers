@@ -5,16 +5,10 @@ import {
   Menu,
   Mail,
   Folder,
-  BarChart2,
   Sun,
   Moon,
-  Trash2,
-  Edit,
   FolderCog,
   UserCircle,
-  Info,
-  Save,
-  Search,
   Grid,
   CheckCircle2,
   Home,
@@ -22,27 +16,42 @@ import {
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
-const Enregistrement = () => {
+const ModificationDepart = () => {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [success, setSuccess] = useState(false);
-  const [confirmCancel, setConfirmCancel] = useState(false); // afficher modal annuler
+    const [confirmCancel, setConfirmCancel] = useState(false); // afficher modal annuler
   const navigate = useNavigate();
 
-  const currentPage = "Arriver du courrier";
+  const [courrier, setCourrier] = useState({
+    dateReception: "",
+    provenance: "",
+    numero: "",
+    dateCorrespondance: "",
+    texte: "",
+    piecesJointes: "",
+  });
 
-  // Soumission du formulaire
+  const currentPage = "Départ du courrier";
+
+  // Gestion de la modification des champs
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCourrier((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // 🔹 Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
     setSuccess(true);
     setTimeout(() => {
-      navigate("/information");
+      navigate("/informationdepart");
     }, 2500);
   };
 
   return (
     <div
-      className={`fixed top-0 left-0 w-full z-40 flex flex-col min-h-screen transition-colors duration-300 ${
+      className={`fixed top-0 left-0 w-full z-40 flex flex-col min-h-screen transition-colors duration-300 relative ${
         darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-100 text-gray-900"
       }`}
     >
@@ -68,8 +77,8 @@ const Enregistrement = () => {
         </Link>
       </header>
 
-      {/* LAYOUT: SIDEBAR + MAIN */}
-      <div className="flex flex-1">
+      {/* LAYOUT */}
+      <div className="flex flex-1 relative">
         {/* SIDEBAR */}
         <aside
           className={`${
@@ -86,7 +95,9 @@ const Enregistrement = () => {
             }`}
           >
             {sidebarOpen && (
-              <h2 className="font-semibold text-lg">Menu</h2>
+              <h2 className="font-semibold text-lg">
+                {darkMode ? "Menu" : "Menu"}
+              </h2>
             )}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -112,35 +123,34 @@ const Enregistrement = () => {
                         : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >
-                    <Home size={18} />{" "}
-                    {sidebarOpen && "Accueil"}
+                    <Home size={18} /> {sidebarOpen && "Accueil"}
                   </li>
                 </Link>
+                <Link to="/information">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
-                    currentPage === "Arriver du courrier"
+                      darkMode
+                        ? "hover:bg-gray-700 text-gray-200"
+                        : "hover:bg-indigo-50 text-indigo-800"
+                    }`}
+                >
+                  <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
+                </li>
+                </Link>
+
+                <li
+                  className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
+                    currentPage === "Départ du courrier"
                       ? darkMode
                         ? "bg-indigo-900 text-indigo-200"
                         : "bg-indigo-100 text-indigo-800"
                       : darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
-                      : "hover:bg-indigo-50 text-indigo-800"
-                  }`}
-                >
-                  <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
-                </li>
-
-                <Link to="/informationdepart">
-                <li
-                  className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium ${
-                    darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
+                      ? "hover:bg-gray-700 text-gray-100"
                       : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
                   <Mail size={18} /> {sidebarOpen && "Départ du courrier"}
                 </li>
-                </Link>
 
                 <Link to="/dashboard">
                   <li
@@ -252,46 +262,17 @@ const Enregistrement = () => {
 
         {/* MAIN */}
         <main className="flex-1 p-6 overflow-y-auto h-[calc(100vh-64px)] relative">
-          {/* BOUTON MODE CLAIR/SOMBRE */}
+          {/* Bouton dark mode */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
               onClick={toggleDarkMode}
               className="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition"
-              aria-label="toggle dark mode"
             >
               {darkMode ? <Sun size={22} /> : <Moon size={22} />}
             </button>
           </div>
 
-          {/* TOP ACTIONS */}
-          <div className="flex flex-col lg:flex-row gap-4 items-start justify-between mb-6">
-            <div className="flex gap-3 flex-wrap">
-              <Link
-                to="/information"
-                className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
-                  darkMode
-                    ? "bg-gray-800 border-gray-700 text-gray-100"
-                    : "bg-white border-indigo-100 text-indigo-800"
-                } shadow-sm hover:shadow-md transition`}
-              >
-                <Info size={18} />
-                <span className="font-medium">Informations</span>
-              </Link>
-
-              <button
-                className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
-                  darkMode
-                    ? "bg-gray-700 border-gray-600 text-gray-100"
-                    : "bg-indigo-100 border-indigo-100 text-indigo-800"
-                } shadow-sm hover:shadow-md transition`}
-              >
-                <Save size={18} />
-                <span className="font-medium">Enregistrer un courrier</span>
-              </button>
-            </div>
-          </div>
-
-          {/* GRAND CARD */}
+          {/* FORMULAIRE */}
           <div
             className={`rounded-xl shadow-lg overflow-hidden ${
               darkMode ? "bg-gray-800" : "bg-white"
@@ -310,24 +291,26 @@ const Enregistrement = () => {
                   darkMode ? "text-white" : "text-indigo-800"
                 }`}
               >
-                ENREGISTREMENT COURRIER
+                MODIFICATION LES INFORMATION DE DEPART
               </h2>
               <p className="text-sm text-gray-500 text-center mt-1">
-                Veuillez remplir les informations du courrier reçu.
+                Mettez à jour les informations du courrier sélectionné.
               </p>
             </div>
 
-            {/* FORMULAIRE */}
             <form
               onSubmit={handleSubmit}
               className="p-6 grid grid-cols-1 md:grid-cols-2 gap-10"
             >
               <div className="flex flex-col">
                 <label className="text-xl font-semibold mb-1">
-                  Date de réception
+                  Date de départ
                 </label>
                 <input
                   type="date"
+                  name="dateDepart"
+                  value={courrier.dateDepart}
+                  onChange={handleChange}
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -337,9 +320,12 @@ const Enregistrement = () => {
               </div>
 
               <div className="flex flex-col">
-                <label className="text-xl font-semibold mb-1">Provenance</label>
+                <label className="text-xl font-semibold mb-1">Destinataire</label>
                 <input
                   type="text"
+                  name="destinataire"
+                  value={courrier.destinataire}
+                  onChange={handleChange}
                   placeholder="Ex: Ministère de l'Économie"
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
@@ -355,6 +341,9 @@ const Enregistrement = () => {
                 </label>
                 <input
                   type="text"
+                  name="numero"
+                  value={courrier.numero}
+                  onChange={handleChange}
                   placeholder="Ex: CORR-2025-001"
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
@@ -370,6 +359,9 @@ const Enregistrement = () => {
                 </label>
                 <input
                   type="date"
+                  name="dateCorrespondance"
+                  value={courrier.dateCorrespondance}
+                  onChange={handleChange}
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -382,6 +374,9 @@ const Enregistrement = () => {
                 <label className="text-xl font-semibold mb-1">Texte</label>
                 <input
                   type="text"
+                  name="texte"
+                  value={courrier.texte}
+                  onChange={handleChange}
                   placeholder="Objet du courrier"
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
@@ -393,11 +388,14 @@ const Enregistrement = () => {
 
               <div className="flex flex-col">
                 <label className="text-xl font-semibold mb-1">
-                  Pièces jointes
+                  Nombre pièces jointes
                 </label>
                 <input
                   type="text"
-                  placeholder="texte des pièces jointes"
+                  name="piecesJointes"
+                  value={courrier.piecesJointes}
+                  onChange={handleChange}
+                  placeholder="Texte des pièces jointes"
                   className={`px-3 py-2 rounded-lg border ${
                     darkMode
                       ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -412,23 +410,23 @@ const Enregistrement = () => {
                   type="submit"
                   className="bg-indigo-600 text-white w-100 px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-medium"
                 >
-                  Enregistrer
+                  Mettre à jour
                 </button>
-                  <button type="button" onClick={() => setConfirmCancel(true)} className="bg-gray-200 text-black w-100 px-6 py-2 rounded-lg hover:bg-gray-300 font-medium">
-                    Annuler
-                  </button>
+                <button
+                  className="bg-gray-200 text-black w-100 px-6 py-2 rounded-lg hover:bg-gray-300 font-medium"
+                  type="button" onClick={() => setConfirmCancel(true)}>
+                  Annuler
+                </button>
               </div>
             </form>
           </div>
 
-          {/* MESSAGE DE SUCCÈS */}
+          {/* Message de succès superposé */}
           {success && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30">
               <div
                 className={`p-10 rounded-2xl shadow-xl text-center ${
-                  darkMode
-                    ? "bg-gray-800 text-gray-100"
-                    : "bg-white text-gray-900"
+                  darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900"
                 }`}
               >
                 <CheckCircle2
@@ -436,13 +434,13 @@ const Enregistrement = () => {
                   className="text-green-500 mx-auto mb-4 animate-bounce"
                 />
                 <h2 className="text-2xl font-bold mb-2">
-                  Enregistré avec succès !
+                  Modification enregistrée avec succès !
                 </h2>
                 <p className="text-gray-500 mb-6">
                   Vous serez redirigé vers la page d’informations.
                 </p>
                 <Link
-                  to="/information"
+                  to="/informationdepart"
                   className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
                 >
                   Retourner maintenant
@@ -460,7 +458,7 @@ const Enregistrement = () => {
                     <h2 className="text-2xl font-bold mb-2"> Voulez-vous vraiment annuler ? </h2> 
                     <p className="text-gray-500 mb-6"> Toutes les informations non enregistrées seront perdues. </p> 
                     <div className="flex justify-center gap-4"> 
-                      <button onClick={() => navigate("/information")} 
+                      <button onClick={() => navigate("/informationdepart")} 
                       className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition" > 
                         Oui 
                       </button> 
@@ -478,4 +476,4 @@ const Enregistrement = () => {
   );
 };
 
-export default Enregistrement;
+export default ModificationDepart;

@@ -21,6 +21,8 @@ import DossiersDivisions from './pages/DossiersDivisions'
 import ListeDossiersDivisions from './pages/ListeDossiersDivisions'
 import DepartCourrier from './pages/DepartCourrier'
 import EnregistrementDepart from './pages/EnregistrementDepart'
+import ListeDossiersAffectes from "./pages/pagesecretaire/ListeDossiersAffectes"
+import ModificationDepart from './pages/ModificationDepart'
 function App() {
   return (
     <DarkModeProvider>
@@ -28,12 +30,13 @@ function App() {
       <Routes>
         <Route path="/inscription-form" element={<InscriptionFormPage />} />
         <Route path="/modification-form" element={<Modification />} />
-        <Route path="/connexion-form" element={<Connexion />} />
+        <Route path="/" element={<Connexion />} />
         <Route path="/profil" element={<ProfilPage />} />
         <Route path="/accueil" element={<Accueil />} />
         <Route path="/information" element={<Informations />} />
         <Route path="/informationdepart" element={<DepartCourrier />} />
         <Route path="/enregistrementdepart" element={<EnregistrementDepart />} />
+        <Route path="/modificationdepart" element={<ModificationDepart />} />
         <Route path="/modification/:id" element={<ModificationEnregistrement />} />
         <Route path="/enregistrement" element={<Enregistrement />} />
         <Route path="/observation-form" element={<ObservationPage />} />
@@ -47,6 +50,7 @@ function App() {
         <Route path="/dossiers-classes" element={<DossiersClasses />} />
         <Route path="/dossiers-divisions" element={<DossiersDivisions />} />
         <Route path="/liste-dossiers-divisions" element={<ListeDossiersDivisions />} />
+        <Route path="/liste-dossiers-affectes" element={<ListeDossiersAffectes />} />
       </Routes>
     </Router>
   </DarkModeProvider>

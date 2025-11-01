@@ -17,6 +17,7 @@ import {
   Search,
   Grid,
   Home,
+  HelpCircle,
 } from "lucide-react";
 import logo from "../assets/mef.png";
 
@@ -32,6 +33,10 @@ const Informations = () => {
   const [filterNumeroCorr, setFilterNumeroCorr] = useState("");
   const [filterTexte, setFilterTexte] = useState("");
 
+  //Modal suppression
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
   const enregistrements = [
     {
       id: 1,
@@ -41,6 +46,7 @@ const Informations = () => {
       numeroCorrespondance: "CORR-2024-456",
       dateCorrespondance: "05/10/2025",
       texte: "Demande de budget",
+      nombrePiecesJointes: 3,
       etat: "En attente",
     },
     {
@@ -51,6 +57,7 @@ const Informations = () => {
       numeroCorrespondance: "CORR-2024-457",
       dateCorrespondance: "06/10/2025",
       texte: "Rapport annuel",
+      nombrePiecesJointes: 2,
       etat: "Traitée",
     },
   ];
@@ -68,6 +75,19 @@ const Informations = () => {
       (!filterTexte || e.texte.toLowerCase().includes(filterTexte.toLowerCase()))
     );
   });
+
+  // Supprimer l'enregistrement
+  const handleDelete = (item) => {
+  setSelectedItem(item);
+  setConfirmDelete(true);
+  };
+
+  const confirmDeletion = () => {
+  console.log("Supprimer:", selectedItem);
+  setConfirmDelete(false);
+  setSelectedItem(null);
+  //appeler API ou modifier state pour réellement supprimer l'élément
+  };
 
   return (
     <div
@@ -185,7 +205,13 @@ const Informations = () => {
 
             {/* MES DOSSIERS */}
             <div>
-              <p className="font-semibold mt-3 text-indigo-500">Mes dossiers</p>
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
+                Mes dossiers
+              </p>
               <ul className="space-y-2 mt-1">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-2 font-medium transition ${
@@ -221,7 +247,11 @@ const Informations = () => {
 
             {/* DOSSIERS DES DIVISIONS */}
             <div>
-              <p className="font-semibold mt-3 text-indigo-500">
+              <p
+                className={`font-semibold mt-3 ${
+                  darkMode ? "text-indigo-300" : "text-indigo-800"
+                }`}
+              >
                 Dossiers des divisions
               </p>
               <ul className="space-y-2 mt-1">
@@ -404,6 +434,7 @@ const Informations = () => {
                     <th className="px-4 py-3 text-center text-sm">N° de la correspondance</th>
                     <th className="px-4 py-3 text-center text-sm">Date de la correspondance</th>
                     <th className="px-4 py-3 text-center text-sm">Texte</th>
+                    <th className="px-4 py-3 text-center text-sm">Nombre pièces jointes</th>
                     <th className="px-4 py-3 text-center text-sm w-36">État</th>
                     <th className="px-4 py-3 text-center text-sm">Actions</th>
                   </tr>
@@ -437,6 +468,7 @@ const Informations = () => {
                           {item.dateCorrespondance}
                         </td>
                         <td className="px-4 py-3 text-center text-sm">{item.texte}</td>
+                        <td className="px-4 py-3 text-center text-sm">{item.nombrePiecesJointes}</td>
                         <td className="px-4 py-3 text-center text-sm">
                           <span
                             className={`px-2 py-1 rounded-full text-sm ${
@@ -450,7 +482,7 @@ const Informations = () => {
                         </td>
                         <td className="px-4 py-3 text-center flex justify-center gap-2">
                           <button className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"><Edit size={16} /></button>
-                          <button className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={16} /></button>
+                          <button onClick={() => handleDelete(item)} className="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={16} /></button>
                         </td>
                       </tr>
                     ))
@@ -459,6 +491,30 @@ const Informations = () => {
               </table>
             </div>
           </div>
+
+          {/* MODAL CONFIRMATION SUPPRESSION */} 
+          {confirmDelete && selectedItem && ( 
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30"> 
+              <div className={`p-10 rounded-2xl shadow-xl text-center ${ 
+                darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900" 
+                }`} 
+              > 
+                <HelpCircle size={80} className="text-red-500 mx-auto mb-4 animate-bounce" /> 
+                  <h2 className="text-2xl font-bold mb-2"> Supprimer cet enregistrement ? </h2> 
+                  <p className="text-gray-500 mb-6"> Êtes-vous sûr de vouloir supprimer "{selectedItem.numero}" ? 
+                    Cette action est irréversible. 
+                  </p> 
+                  <div className="flex justify-center gap-4"> 
+                    <button onClick={confirmDeletion} className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition" > 
+                      Oui 
+                    </button> 
+                    <button onClick={() => setConfirmDelete(false)} className="bg-gray-200 text-black px-6 py-2 rounded-lg hover:bg-gray-300 transition" > 
+                      Non 
+                    </button> 
+                  </div> 
+              </div> 
+            </div> 
+          )}
         </main>
       </div>
     </div>

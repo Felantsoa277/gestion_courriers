@@ -383,7 +383,6 @@ const DossiersClasses = () => {
                     <th className="px-4 py-3 text-center text-sm">Observation</th>
                     <th className="px-4 py-3 text-center text-sm">Bureaux destinataires</th>
                     <th className="px-4 py-3 text-center text-sm w-36">État</th>
-                    <th className="px-4 py-3 text-center text-sm">Actions</th>
                   </tr>
                 </thead>
 
@@ -420,10 +419,6 @@ const DossiersClasses = () => {
                           >
                             {item.etat}
                           </span>
-                        </td>
-                        <td className="px-4 py-3 text-center flex justify-center gap-2">
-                          <button className="px-2 py-1 mt-3 bg-blue-600 text-white rounded hover:bg-blue-700"><Edit size={18} /></button>
-                          <button className="px-2 py-1 mt-3 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={18} /></button>
                         </td>
                       </tr>
                     ))

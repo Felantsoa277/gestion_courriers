@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { DarkModeContext } from "./DarkModeContext";
+import { DarkModeContext } from "../DarkModeContext";
 import { Link } from "react-router-dom";
 import {
   Menu,
@@ -17,11 +17,10 @@ import {
   Pencil,
   File,
   Home,
-  HelpCircle,
 } from "lucide-react";
-import logo from "../assets/mef.png";
+import logo from "../../assets/mef.png";
 
-const DossiersAffectes = () => {
+const ListeDossiersAffectes = () => {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedId, setSelectedId] = useState(null); // ID sélectionné
@@ -34,11 +33,6 @@ const DossiersAffectes = () => {
 
   const currentPage = "Dossier affectés";
 
-  //Modal suppression
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-
-
   const enregistrements = [
     {
       id: 1,
@@ -48,7 +42,6 @@ const DossiersAffectes = () => {
       numeroCorrespondance: "CORR-2024-456",
       dateCorrespondance: "05/10/2025",
       texte: "Demande de budget",
-      nombrePiecesJointes: 3,
       bureau: "Direction Générale",
       etat: "En attente",
     },
@@ -60,7 +53,6 @@ const DossiersAffectes = () => {
       numeroCorrespondance: "CORR-2024-457",
       dateCorrespondance: "06/10/2025",
       texte: "Rapport annuel",
-      nombrePiecesJointes: 2,
       bureau: "Secrétariat",
       etat: "En attente",
     },
@@ -83,19 +75,6 @@ const DossiersAffectes = () => {
   // Fonction pour sélectionner/désélectionner
   const handleRowClick = (id) => {
     setSelectedId(selectedId === id ? null : id);
-  };
-
-  // Supprimer l'enregistrement
-  const handleDelete = (item) => {
-  setSelectedItem(item);
-  setConfirmDelete(true);
-  };
-
-  const confirmDeletion = () => {
-  console.log("Supprimer:", selectedItem);
-  setConfirmDelete(false);
-  setSelectedItem(null);
-  //appeler API ou modifier state pour réellement supprimer l'élément
   };
 
   return (
@@ -163,7 +142,7 @@ const DossiersAffectes = () => {
                   }`}
                 >
                   <Link
-                    to="/accueil"
+                    to="../accueil"
                     className="flex items-center gap-2 w-full"
                   >
                     <Home size={18} />{" "}
@@ -179,14 +158,14 @@ const DossiersAffectes = () => {
                   }`}
                 >
                   <Link
-                    to="/information"
+                    to="../information"
                     className="flex items-center gap-2 w-full"
                   >
                     <Mail size={18} /> {sidebarOpen && "Arriver du courrier"}
                   </Link>
                 </li>
 
-                <Link to="/informationdepart">
+                <Link to="../informationdepart">
                 <li
                   className={`p-2 rounded-md cursor-pointer flex items-center gap-3 font-medium transition duration-200 ease-in-out ${
                     darkMode
@@ -205,7 +184,7 @@ const DossiersAffectes = () => {
                       : "hover:bg-indigo-50 text-indigo-800"
                   }`}
                 >
-                  <Link to="/dashboard" className="flex items-center gap-2 w-full">
+                  <Link to="../dashboard" className="flex items-center gap-2 w-full">
                     <Grid size={18} /> {sidebarOpen && "Dashboard"}
                   </Link>
                 </li>
@@ -234,7 +213,7 @@ const DossiersAffectes = () => {
                   }`}
                 >
                   <Link
-                    to="/dossiers-affectes"
+                    to="../dossiers-affectes"
                     className="flex items-center gap-2 w-full"
                   >
                     <Folder size={18} /> {sidebarOpen && "Dossiers affectés"}
@@ -249,7 +228,7 @@ const DossiersAffectes = () => {
                   }`}
                 >
                   <Link
-                    to="/dossiers-suivis"
+                    to="../dossiers-suivis"
                     className="flex items-center gap-2 w-full"
                   >
                     <Folder size={18} /> {sidebarOpen && "Dossiers suivis"}
@@ -270,15 +249,15 @@ const DossiersAffectes = () => {
               <ul className="space-y-2 mt-1">
                 {[
                   {
-                    path: "/dossiers-divisions",
+                    path: "../dossiers-divisions",
                     label: "Dossiers des divisions",
                   },
                   {
-                    path: "/dossiers-sans-affectataires",
+                    path: "../dossiers-sans-affectataires",
                     label: "Dossiers sans affectataires",
                   },
                   {
-                    path: "/dossiers-classes",
+                    path: "../dossiers-classes",
                     label: "Dossiers archivés/classés",
                   },
                 ].map((item) => (
@@ -301,7 +280,7 @@ const DossiersAffectes = () => {
         </aside>
 
         {/* MAIN */}
-        <main className="flex-1 p-6 ml-63 overflow-auto pt-30 relative">
+        <main className="flex-1 p-6 ml-67 mr-2 overflow-auto pt-30 relative">
           {/* Mode clair/sombre */}
           <div className="absolute bottom-4 right-4 z-20">
             <button
@@ -317,7 +296,7 @@ const DossiersAffectes = () => {
             {/* Boutons */}
             <div className="flex gap-3 flex-wrap">
               <Link
-                to="/dossiers-affectes"
+                to="../dossiers-affectes"
                 className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
                   darkMode
                     ? "bg-gray-700 border-gray-600 text-gray-100"
@@ -326,34 +305,6 @@ const DossiersAffectes = () => {
               >
                 <Info size={18} />
                 <span className="font-medium">Informations</span>
-              </Link>
-
-              <Link
-                to={selectedId ? `/assignation/${selectedId}` : "#"}
-                className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
-                  selectedId
-                    ? darkMode
-                      ? "bg-gray-700 border-gray-600 text-gray-100"
-                      : "bg-white border-indigo-100 text-indigo-800"
-                    : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
-                } shadow-sm hover:shadow-md transition`}
-              >
-                <File size={18} />
-                <span className="font-medium">Assigner</span>
-              </Link>
-
-              <Link
-                to={selectedId ? `/observation-form/${selectedId}` : "#"}
-                className={`flex items-center gap-3 px-4 py-2 rounded-xl border ${
-                  selectedId
-                    ? darkMode
-                      ? "bg-gray-800 border-gray-700 text-gray-100"
-                      : "bg-white border-indigo-100 text-indigo-800"
-                    : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
-                } shadow-sm hover:shadow-md transition`}
-              >
-                <Pencil size={18} />
-                <span className="font-medium">Ajouter une observation</span>
               </Link>
             </div>
           </div>
@@ -444,7 +395,6 @@ const DossiersAffectes = () => {
                     <th className="px-4 py-3 text-center text-sm">N° de la correspondance</th>
                     <th className="px-4 py-3 text-center text-sm">Date de la correspondance</th>
                     <th className="px-4 py-3 text-center text-sm">Texte</th>
-                    <th className="px-4 py-3 text-center text-sm">Nombre pièces jointes</th>
                     <th className="px-4 py-3 text-center text-sm">Bureaux destinataires</th>
                     <th className="px-4 py-3 text-center text-sm w-36">État</th>
                     <th className="px-4 py-3 text-center text-sm">Actions</th>
@@ -473,7 +423,6 @@ const DossiersAffectes = () => {
                         <td className="px-4 py-3 text-center text-sm">{item.numeroCorrespondance}</td>
                         <td className="px-4 py-3 text-center text-sm">{item.dateCorrespondance}</td>
                         <td className="px-4 py-3 text-center text-sm">{item.texte}</td>
-                        <td className="px-4 py-3 text-center text-sm">{item.nombrePiecesJointes}</td>
                         <td className="px-4 py-3 text-center text-sm">{item.bureau}</td>
                         <td className="px-4 py-3 text-center text-sm">
                           <span
@@ -487,7 +436,8 @@ const DossiersAffectes = () => {
                           </span>
                         </td>
                         <td className="px-4 py-3 text-center flex justify-center gap-2">
-                          <button onClick={() => handleDelete(item)} className="px-2 py-1 mt-3 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={20} /></button>
+                          <button className="px-2 py-1 mt-3 bg-blue-600 text-white rounded hover:bg-blue-700"><Edit size={18} /></button>
+                          {/* <button className="px-2 py-1 mt-3 bg-red-600 text-white rounded hover:bg-red-700"><Trash2 size={18} /></button> */}
                         </td>
                       </tr>
                     ))
@@ -496,34 +446,10 @@ const DossiersAffectes = () => {
               </table>
             </div>
           </div>
-
-          {/* MODAL CONFIRMATION SUPPRESSION */} 
-          {confirmDelete && selectedItem && ( 
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30"> 
-              <div className={`p-10 rounded-2xl shadow-xl text-center ${ 
-                darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900" 
-                }`} 
-              > 
-                <HelpCircle size={80} className="text-red-500 mx-auto mb-4 animate-bounce" /> 
-                  <h2 className="text-2xl font-bold mb-2"> Supprimer cet enregistrement ? </h2> 
-                  <p className="text-gray-500 mb-6"> Êtes-vous sûr de vouloir supprimer "{selectedItem.numero}" ? 
-                    Cette action est irréversible. 
-                  </p> 
-                  <div className="flex justify-center gap-4"> 
-                    <button onClick={confirmDeletion} className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition" > 
-                      Oui 
-                    </button> 
-                    <button onClick={() => setConfirmDelete(false)} className="bg-gray-200 text-black px-6 py-2 rounded-lg hover:bg-gray-300 transition" > 
-                      Non 
-                    </button> 
-                  </div> 
-              </div> 
-            </div> 
-          )}
         </main>
       </div>
     </div>
   );
 };
 
-export default DossiersAffectes;
+export default ListeDossiersAffectes;
