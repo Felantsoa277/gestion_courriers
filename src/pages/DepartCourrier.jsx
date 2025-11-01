@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { DarkModeContext } from "./DarkModeContext";
+import { SidebarContext } from "./SideBarContext";
 import { jsPDF } from "jspdf";
 import { Link } from "react-router-dom";
 import {
@@ -25,7 +26,7 @@ import logo from "../assets/mef.png";
 
 const DepartCourrier = () => {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+    const { sidebarOpen, setSidebarOpen } = useContext(SidebarContext);
   const [selectedId, setSelectedId] = useState(null); // ID sélectionné
 
     const handleGeneratePDF = () => {
@@ -156,7 +157,7 @@ const DepartCourrier = () => {
               </h2>
             )}
             <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
+              onClick={() => setSidebarOpen(prev => !prev)}
               className={`${
                 darkMode
                   ? "text-indigo-300 hover:text-indigo-400"

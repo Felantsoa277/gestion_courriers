@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, Lock, ArrowLeft, EyeClosed, Eye, CheckCircle2, } from "lucide-react";
+import { Mail, Lock, ArrowLeft, EyeClosed, Eye, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import logo from "../assets/mef.png";
 import { DarkModeContext } from "./DarkModeContext";
@@ -8,16 +8,21 @@ import { DarkModeContext } from "./DarkModeContext";
 const Connexion = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-    const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false); // nouveau état pour "Connexion..."
   const { darkMode } = useContext(DarkModeContext);
 
-   // Soumission du formulaire
+  // Soumission du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSuccess(true);
+    setIsLoggingIn(true); // afficher message "Connexion..."
     setTimeout(() => {
-      navigate("/accueil");
-    }, 2500);
+      setSuccess(true);
+      setIsLoggingIn(false);
+      setTimeout(() => {
+        navigate("/accueil");
+      }, 1500); // délai pour voir le message de succès
+    }, 1000); // délai initial pour "Connexion..."
   };
 
   return (
@@ -164,29 +169,46 @@ const Connexion = () => {
           <img src={logo} alt="logo de la Mef" className="w-full" />
         </motion.div>
       </div>
-          {/* MESSAGE DE SUCCÈS */}
-          {success && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30">
-              <div
-                className={`p-10 rounded-2xl shadow-xl text-center ${
-                  darkMode
-                    ? "bg-gray-800 text-gray-100"
-                    : "bg-white text-gray-900"
-                }`}
-              >
-                <CheckCircle2
-                  size={80}
-                  className="text-green-500 mx-auto mb-4 animate-bounce"
-                />
-                <h2 className="text-2xl font-bold mb-2">
-                  Connexion réusi !
-                </h2>
-                <p className="text-gray-500 mb-6">
-                  Vous serez redirigé vers la page d’accueil.
-                </p>
-              </div>
-            </div>
-          )}
+
+      {/* MESSAGE "Connexion..." */}
+      {isLoggingIn && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30">
+          <div
+            className={`p-10 rounded-2xl shadow-xl text-center ${
+              darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900"
+            }`}
+          >
+            <CheckCircle2
+              size={80}
+              className="text-green-500 mx-auto mb-4 animate-bounce"
+            />
+            <h2 className="text-2xl font-bold mb-2">Connexion...</h2>
+            <p className="text-gray-500 mb-6">
+              Vous serez redirigé vers la page d’accueil.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* MESSAGE DE SUCCÈS */}
+      {success && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30">
+          <div
+            className={`p-10 rounded-2xl shadow-xl text-center ${
+              darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900"
+            }`}
+          >
+            <CheckCircle2
+              size={80}
+              className="text-green-500 mx-auto mb-4 animate-bounce"
+            />
+            <h2 className="text-2xl font-bold mb-2">Connexion réussie !</h2>
+            <p className="text-gray-500 mb-6">
+              Vous serez redirigé vers la page d’accueil.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

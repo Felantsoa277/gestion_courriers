@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { ArrowLeft, Edit, LogOut, UserCircle } from "lucide-react";
+import React, { useContext, useState } from "react";
+import { ArrowLeft, Edit, LogOut, UserCircle, CheckCircle2 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import logo from "../assets/mef.png";
@@ -8,6 +8,26 @@ import { DarkModeContext } from "./DarkModeContext";
 const ProfilPage = () => {
   const navigate = useNavigate();
   const { darkMode } = useContext(DarkModeContext);
+
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [logoutSuccess, setLogoutSuccess] = useState(false);
+
+  const handleLogout = () => setShowConfirm(true);
+
+  const confirmLogout = () => {
+    setShowConfirm(false);
+    setIsLoggingOut(true);
+
+    setTimeout(() => {
+      setIsLoggingOut(false);
+      setLogoutSuccess(true);
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1500); // délai pour voir le message de succès
+    }, 1200); // délai pour "Déconnexion..."
+  };
 
   return (
     <div
@@ -84,7 +104,9 @@ const ProfilPage = () => {
               >
                 <UserCircle size={70} className="text-white" />
               </div>
-              <h2 className="text-lg font-semibold">HARINANTOANDRO Fandresena</h2>
+              <h2 className="text-lg font-semibold">
+                HARINANTOANDRO Fandresena
+              </h2>
 
               <div className="flex flex-col gap-7 mt-6 w-full">
                 <Link
@@ -98,16 +120,21 @@ const ProfilPage = () => {
                   <Edit size={18} />
                   Éditer
                 </Link>
-                <button
-                  className={`flex items-center justify-center gap-2 font-medium py-2 rounded-lg transition ${
-                    darkMode
-                      ? "bg-green-700 text-white hover:bg-green-800"
-                      : "bg-green-700 text-white hover:bg-green-800"
-                  }`}
-                >
-                  <LogOut size={18} />
-                  Déconnexion
-                </button>
+
+                {/* Bouton Déconnexion */}
+                {!showConfirm && !isLoggingOut && !logoutSuccess && (
+                  <button
+                    onClick={handleLogout}
+                    className={`flex items-center justify-center gap-2 font-medium py-2 rounded-lg transition ${
+                      darkMode
+                        ? "bg-green-700 text-white hover:bg-green-800"
+                        : "bg-green-700 text-white hover:bg-green-800"
+                    }`}
+                  >
+                    <LogOut size={18} />
+                    Déconnexion
+                  </button>
+                )}
               </div>
             </div>
 
@@ -132,7 +159,9 @@ const ProfilPage = () => {
                   <p>
                     <span className="font-semibold text-lg">Email :</span>
                     <br />
-                    <span className={darkMode ? "text-gray-300" : "text-gray-500"}>
+                    <span
+                      className={darkMode ? "text-gray-300" : "text-gray-500"}
+                    >
                       harfandresena@gmail.com
                     </span>
                   </p>
@@ -180,6 +209,75 @@ const ProfilPage = () => {
             </div>
           </div>
         </div>
+
+        {/* MESSAGE BOX */}
+        {(showConfirm || isLoggingOut || logoutSuccess) && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30">
+            <div
+              className={`p-10 rounded-2xl shadow-xl text-center ${
+                darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900"
+              }`}
+            >
+              <CheckCircle2
+                size={80}
+                className={`text-green-500 mx-auto mb-4 ${
+                  isLoggingOut || logoutSuccess ? "animate-bounce" : ""
+                }`}
+              />
+
+              {/* Confirmation */}
+              {showConfirm && !isLoggingOut && !logoutSuccess && (
+                <>
+                  <p className="font-semibold text-center mb-4">
+                    Voulez-vous vraiment vous déconnecter ?
+                  </p>
+                  <div className="flex justify-center gap-4">
+                    <button
+                      onClick={confirmLogout}
+                      className={`px-4 py-1 rounded-lg font-medium ${
+                        darkMode
+                          ? "bg-green-600 hover:bg-green-700 text-white"
+                          : "bg-green-700 hover:bg-green-800 text-white"
+                      }`}
+                    >
+                      Oui
+                    </button>
+                    <button
+                      onClick={() => setShowConfirm(false)}
+                      className={`px-4 py-1 rounded-lg font-medium ${
+                        darkMode
+                          ? "bg-gray-500 hover:bg-gray-600 text-white"
+                          : "bg-gray-400 hover:bg-gray-500 text-white"
+                      }`}
+                    >
+                      Non
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* Déconnexion en cours */}
+              {isLoggingOut && !logoutSuccess && (
+                <>
+                  <h2 className="text-2xl font-bold mb-2">Déconnexion...</h2>
+                  <p className="text-gray-500 mb-6">
+                    Vous serez redirigé vers la page de connexion.
+                  </p>
+                </>
+              )}
+
+              {/* Déconnexion réussie */}
+              {logoutSuccess && (
+                <>
+                  <h2 className="text-2xl font-bold mb-2">Déconnexion réussie !</h2>
+                  <p className="text-gray-500 mb-6">
+                    Vous allez être redirigé vers la page de connexion.
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Logo */}
         <motion.div

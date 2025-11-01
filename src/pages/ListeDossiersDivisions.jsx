@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { DarkModeContext } from "./DarkModeContext";
+import { SidebarContext } from "./SideBarContext";
 import {Link} from "react-router-dom";
 import {
   Menu,
@@ -23,7 +24,7 @@ import logo from "../assets/mef.png";
 
 const ListeDossiersDivisions = () => {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+    const { sidebarOpen, setSidebarOpen } = useContext(SidebarContext);
 
   // États pour les filtres
     const [filterProvenance, setFilterProvenance] = useState("");
@@ -113,7 +114,7 @@ const ListeDossiersDivisions = () => {
           >
             {sidebarOpen && <h2 className="font-semibold text-lg">Menu</h2>}
             <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
+              onClick={() => setSidebarOpen(prev => !prev)}
               className={`${
                 darkMode
                   ? "text-indigo-300 hover:text-indigo-400"
@@ -221,12 +222,12 @@ const ListeDossiersDivisions = () => {
                 <Link to="/dossiers-divisions">
                   <li
                     className={`p-2 rounded-md cursor-pointer flex items-center gap-2 ${
-                      currentPage === "Dossier des divisions"
+                      currentPage === "Dossiers des divisions"
                         ? darkMode
                         ? "bg-indigo-900 text-indigo-200"
                         : "bg-indigo-100 text-indigo-800"
-                      : darkMode
-                      ? "hover:bg-gray-700 text-gray-200"
+                        : darkMode
+                        ? "hover:bg-gray-700 text-gray-100"
                       : "hover:bg-indigo-50 text-indigo-800"
                     }`}
                   >

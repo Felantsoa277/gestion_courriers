@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { DarkModeContext } from "./DarkModeContext";
+import { SidebarContext } from "./SideBarContext";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Menu,
@@ -19,7 +20,7 @@ import Modification from "./ModificationInfo";
 
 const ModificationObservation = () => {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+    const { sidebarOpen, setSidebarOpen } = useContext(SidebarContext);
   const [selectedOption, setSelectedOption] = useState("");
   const [autreObservation, setAutreObservation] = useState("");
   const [success, setSuccess] = useState(false);
@@ -127,7 +128,7 @@ const ModificationObservation = () => {
           <div className="flex items-center justify-between px-4 py-3 border-b">
             {sidebarOpen && <h2 className="font-semibold text-lg">Menu</h2>}
             <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
+              onClick={() => setSidebarOpen(prev => !prev)}
               className="text-indigo-700 hover:text-indigo-900"
               aria-label="toggle sidebar"
             >

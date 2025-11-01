@@ -67,22 +67,23 @@ const Accueil = () => {
         darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"
       }`}
     >
-      {/* 🔹 HEADER */}
+      {/* HEADER */}
       <header
-        className={`flex items-center justify-between px-6 py-3 ${
-          darkMode ? "bg-indigo-950" : "bg-indigo-900"
-        } text-white shadow-md`}
+        className={`flex items-center justify-between px-6 py-4 transition-colors duration-300 ${
+          darkMode ? "bg-gray-800 text-gray-100" : "bg-indigo-900 text-white"
+        }`}
       >
         <div className="flex items-center gap-3">
-          <img src={logo} alt="logo" className="w-18 h-17 rounded-full" />
-          <h1 className="text-4xl font-bold tracking-wide">SIIGC</h1>
+          <img src={logo} alt="Logo" className="w-18 h-17 rounded-full" />
+          <h1 className="text-4xl font-bold">SIIGC</h1>
         </div>
 
-        <div className="flex items-center gap-3">
-            <p className="font-medium text-lg">HARINANTOANDRO Fandresena</p>
-            <UserCircle size={40} className="text-white" />
-        </div>
+        <Link to="/profil" className="flex items-center gap-3">
+          <span className="hidden sm:block font-medium hover:underline">HARINANTOANDRO Fandresena</span>
+          <UserCircle size={40} className={`${darkMode ? "text-gray-100" : "text-white"}`} />
+        </Link>
       </header>
+
 
       {/* ACCUEIL */}
       <div className="px-10 py-6">
